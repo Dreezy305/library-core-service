@@ -1,7 +1,9 @@
 package handler
 
 import (
+	"errors"
 	"fmt"
+	"time"
 
 	"github.com/dreezy305/library-core-service/internal/authors/service"
 	"github.com/dreezy305/library-core-service/internal/model"
@@ -19,13 +21,13 @@ func NewAuthorHandler(s *service.AuthorService) *AuthorHandler {
 }
 
 func (h *AuthorHandler) CreateAuthor(c fiber.Ctx) error {
-	var payload types.AuthorType
+	var payload types.AuthorPayload
 
 	if err := c.Bind().Body(&payload); err != nil {
 		fmt.Println(err)
 		return c.Status(fiber.StatusForbidden).JSON(validators.FormatValidationError(err))
 	}
-	
+
 	fmt.Println(payload)
 
 	errs := validators.ValidateStruct(payload)
@@ -33,9 +35,23 @@ func (h *AuthorHandler) CreateAuthor(c fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(validators.FormatValidationError(errs))
 	}
 
+	dob, err := time.Parse("2006-01-02", payload.DateOfBirth)
+	if err != nil {
+		return errors.New("dateOfBirth must be in YYYY-MM-DD format")
+	}
+
 	u := &model.AuthorEntity{
-		FirstName: payload.FirstName,
-		LastName:  payload.LastName,
+		FirstName:   payload.FirstName,
+		LastName:    payload.LastName,
+		Nationality: payload.Nationality,
+		DateOfBirth: dob,
+		Email:       &payload.Email,
+		Bio:         *payload.Bio,
+		PenName:     *payload.PenName,
+		Website:     *payload.Website,
+		Twitter:     *payload.Twitter,
+		Facebook:    *payload.Facebook,
+		Linkedln:    *payload.Linkedln,
 	}
 
 	error := h.Service.CreateAuthor(u)

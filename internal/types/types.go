@@ -102,15 +102,15 @@ type UpdateUser struct {
 }
 
 type AuthorPayload struct {
-	FirstName   string `json:"firstName"`
-	LastName    string `json:"lastName"`
-	Bio         string `json:"bio"`
-	DateOfBirth string `json:"dateOfBirth"`
-	Email       string `json:"email"`
-	Nationality string `json:"nationality"`
-	Website     string `json:"website"`
-	Twitter     string `json:"twitter"`
-	Facebook    string `json:"facebook"`
-	Linkedln    string `json:"linkedln"`
-	PenName     string `json:"penName"`
+	FirstName   string  `json:"firstName"`
+	LastName    string  `json:"lastName"`
+	Bio         *string `json:"bio,omitempty"`
+	DateOfBirth string  `json:"dateOfBirth"`
+	Email       string  `json:"email"`
+	Nationality string  `json:"nationality"`
+	Website     *string `json:"website,omitempty"`
+	Twitter     *string `json:"twitter,omitempty"`
+	Facebook    *string `json:"facebook,omitempty"`
+	Linkedln    *string `json:"linkedln,omitempty"`
+	PenName     *string `json:"penName,omitempty"`
 }

@@ -17,7 +17,7 @@ func NewGormAuthorRepository(db *gorm.DB) *GormAuthorRepository {
 }
 
 func (r *GormAuthorRepository) CreateAuthor(a *model.AuthorEntity) error {
-	var author types.AuthResponse
+	var author types.AuthorPayload
 	err := r.DB.Create(author).Error
 	if err != nil {
 		fmt.Println("create author error:", err)
