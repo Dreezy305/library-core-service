@@ -14,6 +14,10 @@ func NewAuthorService(repo repository.AuthorRepository) *AuthorService {
 	return &AuthorService{repo: repo}
 }
 
+func (s *AuthorService) AuthorExist(email string) (bool, error) {
+	return s.repo.AuthorExist(email)
+}
+
 func (s *AuthorService) CreateAuthor(a *model.AuthorEntity) error {
 	return s.repo.CreateAuthor(a)
 }

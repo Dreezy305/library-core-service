@@ -16,6 +16,18 @@ func NewGormAuthorRepository(db *gorm.DB) *GormAuthorRepository {
 	return &GormAuthorRepository{DB: db}
 }
 
+func (r *GormAuthorRepository) AuthorExist(email string) (bool, error) {
+	var count int64
+	err := r.DB.Model(&model.AuthorEntity{}).Where("email = ?", email).Count(&count).Error
+	if count > 0 {
+		return true, nil
+	}
+	if err != nil {
+		return false, err
+	}
+	return false, nil
+}
+
 func (r *GormAuthorRepository) CreateAuthor(a *model.AuthorEntity) error {
 	var author types.AuthorPayload
 	err := r.DB.Create(author).Error

@@ -13,6 +13,10 @@ func NewAuthorRepository(gormRepo *GormAuthorRepository) *AuthorRepository {
 	return &AuthorRepository{gormRepo: gormRepo}
 }
 
+func (r *AuthorRepository) AuthorExist(email string) (bool, error) {
+	return r.gormRepo.AuthorExist(email)
+}
+
 func (r *AuthorRepository) CreateAuthor(a *model.AuthorEntity) error {
 	return r.gormRepo.CreateAuthor(a)
 }

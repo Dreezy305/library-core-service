@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"errors"
 	"fmt"
 	"time"
 
@@ -35,9 +34,15 @@ func (h *AuthorHandler) CreateAuthor(c fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(validators.FormatValidationError(errs))
 	}
 
+	exist, _ := h.Service.AuthorExist(payload.Email)
+
+	if exist {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Author has already been created"})
+	}
+
 	dob, err := time.Parse("2006-01-02", payload.DateOfBirth)
 	if err != nil {
-		return errors.New("dateOfBirth must be in YYYY-MM-DD format")
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "dateOfBirth must be in YYYY-MM-DD format"})
 	}
 
 	u := &model.AuthorEntity{
@@ -60,7 +65,7 @@ func (h *AuthorHandler) CreateAuthor(c fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Failed to create author"})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Author created successfully"})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": "Author created successfully"})
 }
 
 func (h *AuthorHandler) GetAuthors(c fiber.Ctx) error {
