@@ -13,10 +13,8 @@ func NewAuthorRepository(gormRepo *GormAuthorRepository) *AuthorRepository {
 	return &AuthorRepository{gormRepo: gormRepo}
 }
 
-func (r *AuthorRepository) CreateAuthor(a *model.AuthorEntity) (*types.AuthResponse, error) {
-	var author types.AuthResponse
-
-	return &author, nil
+func (r *AuthorRepository) CreateAuthor(a *model.AuthorEntity) error {
+	return r.gormRepo.CreateAuthor(a)
 }
 
 func (r *AuthorRepository) GetAuthors(page int, limit int) error {

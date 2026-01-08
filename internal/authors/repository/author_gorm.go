@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"fmt"
+
 	"github.com/dreezy305/library-core-service/internal/model"
 	"github.com/dreezy305/library-core-service/internal/types"
 	"gorm.io/gorm"
@@ -14,10 +16,14 @@ func NewGormAuthorRepository(db *gorm.DB) *GormAuthorRepository {
 	return &GormAuthorRepository{DB: db}
 }
 
-func (r *GormAuthorRepository) CreateAuthor(a *model.AuthorEntity) (*types.AuthResponse, error) {
+func (r *GormAuthorRepository) CreateAuthor(a *model.AuthorEntity) error {
 	var author types.AuthResponse
-
-	return &author, nil
+	err := r.DB.Create(author).Error
+	if err != nil {
+		fmt.Println("create author error:", err)
+		return err
+	}
+	return nil
 }
 
 func (r *GormAuthorRepository) GetAuthors(page int, limit int) error {

@@ -14,10 +14,8 @@ func NewAuthorService(repo repository.AuthorRepository) *AuthorService {
 	return &AuthorService{repo: repo}
 }
 
-func (s *AuthorService) CreateAuthor(a *model.AuthorEntity) (*types.AuthResponse, error) {
-	var author types.AuthResponse
-
-	return &author, nil
+func (s *AuthorService) CreateAuthor(a *model.AuthorEntity) error {
+	return s.repo.CreateAuthor(a)
 }
 
 func (s *AuthorService) GetAuthors(page int, limit int) error {
