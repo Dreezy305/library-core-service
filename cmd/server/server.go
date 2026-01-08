@@ -9,7 +9,6 @@ import (
 	"github.com/dreezy305/library-core-service/internal/routes"
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/cors"
-	// logger "github.com/gofiber/fiber/v3/log"
 )
 
 func Start() {
