@@ -29,7 +29,6 @@ func (r *GormAuthorRepository) GetAuthor(authorId string) error {
 }
 
 
-
 func (r *GormAuthorRepository) UpdateAuthor(payload *types.UpdateUser) error {
 	return nil
 }
