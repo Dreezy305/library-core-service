@@ -31,17 +31,31 @@ type BookEntity struct {
 	CreatedAt       time.Time
 	UpdatedAt       time.Time
 	DeletedAt       gorm.DeletedAt `gorm:"index"`
+
+	Member AuthorEntity `gorm:"foreignKey:AuthorID"`
 }
 
 type AuthorEntity struct {
-	ID        string  `gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
-	FirstName string  `gorm:"not null"`
-	LastName  string  `gorm:"not null"`
-	Email     *string `gorm:"not null;uniqueIndex"` // Unique email field
-	Bio       string
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	ID           string  `gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
+	FirstName    string  `gorm:"not null"`
+	LastName     string  `gorm:"not null"`
+	Email        *string `gorm:"not null;uniqueIndex"` // Unique email field
+	Bio          string  `gorm:"not null"`
+	PenName      string  `gorm:"null"`
+	Nationality  string  `gorm:"not null"`
+	ProfileImage string  `gorm:"null"`
+	Website      string  `gorm:"not null"`
+	DateOfBirth  time.Time
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
+	DeletedAt    gorm.DeletedAt `gorm:"index"`
+	TotalBooks   int            `gorm:"default:0"`
+	IsActive     bool           `gorm:"default:true"`
+	Twitter      string         `gorm:"not null"`
+	Linkedln     string         `gorm:"not null"`
+	Facebook     string         `gorm:"not null"`
+
+	Books []BookEntity `gorm:"foreignKey:AuthorID"`
 }
 
 type LoanEntity struct {

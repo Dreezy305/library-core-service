@@ -102,6 +102,8 @@ type UpdateUser struct {
 }
 
 type AuthResponse struct {
-	FirstName string `json:"firstName"`
-	LastName  string `json:"lastName"`
+	FirstName   string `json:"firstName"`
+	LastName    string `json:"lastName"`
+	Bio         string `json:"bio"`
+	DateOfBirth string `json:"dateOfBirth"`
 }
