@@ -25,6 +25,7 @@ func (h *AuthorHandler) CreateAuthor(c fiber.Ctx) error {
 		fmt.Println(err)
 		return c.Status(fiber.StatusForbidden).JSON(validators.FormatValidationError(err))
 	}
+	
 	fmt.Println(payload)
 
 	errs := validators.ValidateStruct(payload)

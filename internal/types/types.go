@@ -101,9 +101,16 @@ type UpdateUser struct {
 	LastName  string `json:"lastName"`
 }
 
-type AuthResponse struct {
+type AuthorPayload struct {
 	FirstName   string `json:"firstName"`
 	LastName    string `json:"lastName"`
 	Bio         string `json:"bio"`
 	DateOfBirth string `json:"dateOfBirth"`
+	Email       string `json:"email"`
+	Nationality string `json:"nationality"`
+	Website     string `json:"website"`
+	Twitter     string `json:"twitter"`
+	Facebook    string `json:"facebook"`
+	Linkedln    string `json:"linkedln"`
+	PenName     string `json:"penName"`
 }
