@@ -4,6 +4,9 @@ import (
 	AuthHandler "github.com/dreezy305/library-core-service/internal/auth/handler"
 	AuthRepository "github.com/dreezy305/library-core-service/internal/auth/repository"
 	AuthService "github.com/dreezy305/library-core-service/internal/auth/service"
+	AuthorHandler "github.com/dreezy305/library-core-service/internal/authors/handler"
+	AuthorRepository "github.com/dreezy305/library-core-service/internal/authors/repository"
+	AuthorService "github.com/dreezy305/library-core-service/internal/authors/service"
 	UserHandler "github.com/dreezy305/library-core-service/internal/users/handler"
 	UserRepository "github.com/dreezy305/library-core-service/internal/users/repository"
 	UserService "github.com/dreezy305/library-core-service/internal/users/service"
@@ -21,6 +24,11 @@ var userHandler *UserHandler.UserHandler
 var userService *UserService.UserService
 var serviceRepository *UserRepository.UserRepository
 var userGormRepo *UserRepository.GormUserRepository
+
+var authorHandler *AuthorHandler.AuthorHandler
+var authorService *AuthorService.AuthorService
+var authorRespository *AuthorRepository.AuthorRepository
+var authorGormRepo *AuthorRepository.GormAuthorRepository
 
 // health check route
 func HealthCheckRoute(app fiber.Router) {
@@ -58,13 +66,16 @@ func UserRoutes(app fiber.Router, db *gorm.DB) {
 
 // AUTHOR ROUTES
 func AuthorRoutes(app fiber.Router, db *gorm.DB) {
+	authorGormRepo := AuthorRepository.NewGormAuthorRepository(db)
+	authorRepo := AuthorRepository.NewAuthorRepository(authorGormRepo)
+	authorService := AuthorService.NewAuthorService(*authorRepo)
+	authorHandler := AuthorHandler.NewAuthorHandler(authorService)
 	// Define author-related routes here
-	// authorGroup := app.Group("/authors")
-	// authorGroup.Get("/")
-	// authorGroup.Get("/:id")
-	// authorGroup.Post("/")
-	// authorGroup.Put("/:id")
-	// authorGroup.Delete("/:id")
+	authorGroup := app.Group("/authors")
+	authorGroup.Get("/", authorHandler.GetAuthors)
+	authorGroup.Get("/:id", authorHandler.GetAuthor)
+	authorGroup.Post("/create", authorHandler.CreateAuthor)
+	authorGroup.Put("/:id", authorHandler.UpdateAuthor)
 }
 
 // BOOK ROUTES
