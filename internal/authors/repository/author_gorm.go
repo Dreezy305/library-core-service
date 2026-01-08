@@ -28,7 +28,10 @@ func (r *GormAuthorRepository) GetAuthor(authorId string) error {
 	return nil
 }
 
-
 func (r *GormAuthorRepository) UpdateAuthor(payload *types.UpdateUser) error {
+	return nil
+}
+
+func (r *GormAuthorRepository) GetAuthorBooksByAuthorId(authorId string) error {
 	return nil
 }
