@@ -104,10 +104,10 @@ type UpdateUser struct {
 type AuthorPayload struct {
 	FirstName   string  `json:"firstName"`
 	LastName    string  `json:"lastName"`
-	Bio         *string `json:"bio,omitempty"`
 	DateOfBirth string  `json:"dateOfBirth"`
 	Email       string  `json:"email"`
 	Nationality string  `json:"nationality"`
+	Bio         *string `json:"bio,omitempty"`
 	Website     *string `json:"website,omitempty"`
 	Twitter     *string `json:"twitter,omitempty"`
 	Facebook    *string `json:"facebook,omitempty"`

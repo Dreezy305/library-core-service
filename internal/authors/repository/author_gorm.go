@@ -29,8 +29,7 @@ func (r *GormAuthorRepository) AuthorExist(email string) (bool, error) {
 }
 
 func (r *GormAuthorRepository) CreateAuthor(a *model.AuthorEntity) error {
-	var author types.AuthorPayload
-	err := r.DB.Create(author).Error
+	err := r.DB.Create(a).Error
 	if err != nil {
 		fmt.Println("create author error:", err)
 		return err
