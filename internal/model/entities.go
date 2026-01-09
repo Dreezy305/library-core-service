@@ -50,7 +50,7 @@ type AuthorEntity struct {
 	UpdatedAt    time.Time
 	DeletedAt    gorm.DeletedAt `gorm:"index"`
 	TotalBooks   int            `gorm:"default:0"`
-	IsActive     bool           `gorm:"default:true"`
+	IsActive     bool           `gorm:"default:false"`
 	Twitter      string         `gorm:"not null"`
 	Linkedln     string         `gorm:"not null"`
 	Facebook     string         `gorm:"not null"`

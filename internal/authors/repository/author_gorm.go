@@ -107,10 +107,55 @@ func (r *GormAuthorRepository) GetAuthor(authorId string) (*types.AuthorResponse
 	return response, nil
 }
 
-func (r *GormAuthorRepository) UpdateAuthor(payload *types.UpdateUser) error {
+func (r *GormAuthorRepository) UpdateAuthor(authorId string, payload *types.UpdateAuthorPayload) error {
+	updates := map[string]interface{}{}
+
+	if payload.FirstName != nil {
+		updates["first_name"] = payload.FirstName
+	}
+	if payload.LastName != nil {
+		updates["last_name"] = payload.LastName
+	}
+	if payload.DateOfBirth != nil {
+		updates["date_of_birth"] = payload.DateOfBirth
+	}
+	if payload.Nationality != nil {
+		updates["nationality"] = *payload.Nationality
+	}
+	if payload.Bio != nil {
+		updates["bio"] = *payload.Bio
+	}
+	if payload.Website != nil {
+		updates["website"] = *payload.Website
+	}
+	if payload.Twitter != nil {
+		updates["twitter"] = *payload.Twitter
+	}
+	if payload.Facebook != nil {
+		updates["facebook"] = *payload.Facebook
+	}
+	if payload.Linkedln != nil {
+		updates["linkedln"] = *payload.Linkedln
+	}
+	if payload.PenName != nil {
+		updates["pen_name"] = *payload.PenName
+	}
+
+	// Nothing to update
+	if len(updates) == 0 {
+		return nil
+	}
+
+	err := r.DB.Model(&model.AuthorEntity{}).Where("id = ?", authorId).Updates(updates).Error
+
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
 	return nil
 }
 
 func (r *GormAuthorRepository) GetAuthorBooksByAuthorId(authorId string) error {
+
 	return nil
 }

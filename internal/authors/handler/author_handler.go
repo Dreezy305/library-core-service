@@ -109,6 +109,10 @@ func (h *AuthorHandler) GetAuthor(c fiber.Ctx) error {
 }
 
 func (h *AuthorHandler) UpdateAuthor(c fiber.Ctx) error {
+	authorId := c.Params("id")
+	if authorId == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "id parameter is missing"})
+	}
 	return nil
 }
 

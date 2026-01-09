@@ -29,8 +29,8 @@ func (r *AuthorRepository) GetAuthor(authorId string) (*types.AuthorResponse, er
 	return r.gormRepo.GetAuthor(authorId)
 }
 
-func (r *AuthorRepository) UpdateAuthor(payload *types.UpdateUser) error {
-	return nil
+func (r *AuthorRepository) UpdateAuthor(authorId string, payload *types.UpdateAuthorPayload) error {
+	return r.gormRepo.UpdateAuthor(authorId, payload)
 }
 
 func (r *AuthorRepository) GetAuthorBooksByAuthorId(authorId string) error {

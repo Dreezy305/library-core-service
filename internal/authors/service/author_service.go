@@ -30,8 +30,8 @@ func (s *AuthorService) GetAuthor(authorId string) (*types.AuthorResponse, error
 	return s.repo.GetAuthor(authorId)
 }
 
-func (s *AuthorService) UpdateAuthor(payload *types.UpdateUser) error {
-	return nil
+func (s *AuthorService) UpdateAuthor(authorId string, payload *types.UpdateAuthorPayload) error {
+	return s.repo.UpdateAuthor(authorId, payload)
 }
 
 func (s *AuthorService) GetAuthorBooksByAuthorId(authorId string) error {

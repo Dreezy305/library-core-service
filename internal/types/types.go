@@ -114,6 +114,7 @@ type AuthorPayload struct {
 	Linkedln    *string `json:"linkedln,omitempty"`
 	PenName     *string `json:"penName,omitempty"`
 }
+
 type AuthorResponse struct {
 	ID          string  `json:"id"`
 	FirstName   string  `json:"firstName"`
@@ -121,6 +122,19 @@ type AuthorResponse struct {
 	DateOfBirth string  `json:"dateOfBirth"`
 	Email       string  `json:"email"`
 	Nationality string  `json:"nationality"`
+	Bio         *string `json:"bio,omitempty"`
+	Website     *string `json:"website,omitempty"`
+	Twitter     *string `json:"twitter,omitempty"`
+	Facebook    *string `json:"facebook,omitempty"`
+	Linkedln    *string `json:"linkedln,omitempty"`
+	PenName     *string `json:"penName,omitempty"`
+}
+
+type UpdateAuthorPayload struct {
+	FirstName   *string `json:"firstName"`
+	LastName    *string `json:"lastName"`
+	DateOfBirth *string `json:"dateOfBirth"`
+	Nationality *string `json:"nationality"`
 	Bio         *string `json:"bio,omitempty"`
 	Website     *string `json:"website,omitempty"`
 	Twitter     *string `json:"twitter,omitempty"`
