@@ -37,8 +37,41 @@ func (r *GormAuthorRepository) CreateAuthor(a *model.AuthorEntity) error {
 	return nil
 }
 
-func (r *GormAuthorRepository) GetAuthors(page int, limit int) error {
-	return nil
+func (r *GormAuthorRepository) GetAuthors(page int, limit int) ([]*types.AuthorResponse, int64, error) {
+	var total int64
+	var authors []*model.AuthorEntity
+
+	if page <= 0 || limit <= 0 {
+		page = 1
+		limit = 1
+	}
+
+	offset := (page - 1) * limit
+
+	err := r.DB.Model(&model.AuthorEntity{}).Find(&authors).Offset(offset).Limit(limit).Error
+
+	if err != nil {
+		return nil, 0, err
+	}
+
+	errr := r.DB.Model(&model.AuthorEntity{}).Count(&total).Error
+
+	if errr != nil {
+		return nil, 0, errr
+	}
+
+	var response []*types.AuthorResponse
+	for _, author := range authors {
+		response = append(response, &types.AuthorResponse{
+			ID: author.ID,
+			FirstName: author.FirstName,
+			LastName:  author.LastName,
+			Bio:       &author.Bio,
+			Email:     *author.Email,
+		})
+	}
+
+	return response, total, nil
 }
 
 func (r *GormAuthorRepository) GetAuthor(authorId string) error {

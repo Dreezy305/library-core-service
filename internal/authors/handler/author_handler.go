@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/dreezy305/library-core-service/internal/authors/service"
@@ -69,7 +70,27 @@ func (h *AuthorHandler) CreateAuthor(c fiber.Ctx) error {
 }
 
 func (h *AuthorHandler) GetAuthors(c fiber.Ctx) error {
-	return nil
+	queries := c.Queries()
+
+	page, err := strconv.Atoi(queries["page"])
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Invalid value for paramater page"})
+	}
+
+	limit, errr := strconv.Atoi(queries["limit"])
+
+	if errr != nil {
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Invalid value for paramater limit"})
+	}
+
+	authors, total, errrr := h.Service.GetAuthors(page, limit)
+
+	if errrr != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Failed to fetch authors"})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Authors fetched successfully", "data": fiber.Map{"authors": authors, "meta": fiber.Map{"total": total, "page": page, "limit": limit}}})
 }
 
 func (h *AuthorHandler) GetAuthor(c fiber.Ctx) error {

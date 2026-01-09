@@ -21,8 +21,8 @@ func (r *AuthorRepository) CreateAuthor(a *model.AuthorEntity) error {
 	return r.gormRepo.CreateAuthor(a)
 }
 
-func (r *AuthorRepository) GetAuthors(page int, limit int) error {
-	return nil
+func (r *AuthorRepository) GetAuthors(page int, limit int) ([]*types.AuthorResponse, int64, error) {
+	return r.gormRepo.GetAuthors(page, limit)
 }
 
 func (r *AuthorRepository) GetAuthor(authorId string) error {

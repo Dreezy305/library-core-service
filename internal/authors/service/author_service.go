@@ -22,8 +22,8 @@ func (s *AuthorService) CreateAuthor(a *model.AuthorEntity) error {
 	return s.repo.CreateAuthor(a)
 }
 
-func (s *AuthorService) GetAuthors(page int, limit int) error {
-	return nil
+func (s *AuthorService) GetAuthors(page int, limit int) ([]*types.AuthorResponse, int64, error) {
+	return s.repo.GetAuthors(page, limit)
 }
 
 func (s *AuthorService) GetAuthor(authorId string) error {
