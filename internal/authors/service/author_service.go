@@ -26,8 +26,8 @@ func (s *AuthorService) GetAuthors(page int, limit int) ([]*types.AuthorResponse
 	return s.repo.GetAuthors(page, limit)
 }
 
-func (s *AuthorService) GetAuthor(authorId string) error {
-	return nil
+func (s *AuthorService) GetAuthor(authorId string) (*types.AuthorResponse, error) {
+	return s.repo.GetAuthor(authorId)
 }
 
 func (s *AuthorService) UpdateAuthor(payload *types.UpdateUser) error {

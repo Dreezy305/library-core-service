@@ -94,7 +94,18 @@ func (h *AuthorHandler) GetAuthors(c fiber.Ctx) error {
 }
 
 func (h *AuthorHandler) GetAuthor(c fiber.Ctx) error {
-	return nil
+	authorId := c.Params("id")
+	if authorId == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "id parameter is missing"})
+	}
+
+	author, err := h.Service.GetAuthor(authorId)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "author not found"})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Author fetched successfully", "data": fiber.Map{"author": author}})
 }
 
 func (h *AuthorHandler) UpdateAuthor(c fiber.Ctx) error {

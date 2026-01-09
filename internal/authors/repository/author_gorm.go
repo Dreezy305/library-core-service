@@ -81,8 +81,30 @@ func (r *GormAuthorRepository) GetAuthors(page int, limit int) ([]*types.AuthorR
 	return response, total, nil
 }
 
-func (r *GormAuthorRepository) GetAuthor(authorId string) error {
-	return nil
+func (r *GormAuthorRepository) GetAuthor(authorId string) (*types.AuthorResponse, error) {
+	var author model.AuthorEntity
+
+	err := r.DB.Where("id = ?", authorId).Find(&author).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	response := &types.AuthorResponse{
+		ID:          author.ID,
+		FirstName:   author.FirstName,
+		LastName:    author.LastName,
+		Bio:         &author.Bio,
+		Email:       *author.Email,
+		DateOfBirth: author.DateOfBirth.Format("2006-01-02"),
+		Nationality: author.Nationality,
+		Website:     &author.Website,
+		Twitter:     &author.Twitter,
+		Facebook:    &author.Facebook,
+		Linkedln:    &author.Linkedln,
+		PenName:     &author.PenName,
+	}
+	return response, nil
 }
 
 func (r *GormAuthorRepository) UpdateAuthor(payload *types.UpdateUser) error {

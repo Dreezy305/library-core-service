@@ -25,8 +25,8 @@ func (r *AuthorRepository) GetAuthors(page int, limit int) ([]*types.AuthorRespo
 	return r.gormRepo.GetAuthors(page, limit)
 }
 
-func (r *AuthorRepository) GetAuthor(authorId string) error {
-	return nil
+func (r *AuthorRepository) GetAuthor(authorId string) (*types.AuthorResponse, error) {
+	return r.gormRepo.GetAuthor(authorId)
 }
 
 func (r *AuthorRepository) UpdateAuthor(payload *types.UpdateUser) error {
