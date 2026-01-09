@@ -113,7 +113,20 @@ func (h *AuthorHandler) UpdateAuthor(c fiber.Ctx) error {
 	if authorId == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "id parameter is missing"})
 	}
-	return nil
+
+	var payload types.UpdateAuthorPayload
+	if err := c.Bind().Body(&payload); err != nil {
+		fmt.Println(err)
+		return c.Status(fiber.StatusForbidden).JSON(validators.FormatValidationError(err))
+	}
+
+	err := h.Service.UpdateAuthor(authorId, &payload)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Failed to update author"})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Author upated successfully"})
 }
 
 func (h *AuthorHandler) GetAuthorBooksByAuthorId(c fiber.Ctx) error {
