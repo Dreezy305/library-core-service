@@ -63,11 +63,18 @@ func (r *GormAuthorRepository) GetAuthors(page int, limit int) ([]*types.AuthorR
 	var response []*types.AuthorResponse
 	for _, author := range authors {
 		response = append(response, &types.AuthorResponse{
-			ID: author.ID,
-			FirstName: author.FirstName,
-			LastName:  author.LastName,
-			Bio:       &author.Bio,
-			Email:     *author.Email,
+			ID:          author.ID,
+			FirstName:   author.FirstName,
+			LastName:    author.LastName,
+			Bio:         &author.Bio,
+			Email:       *author.Email,
+			DateOfBirth: author.DateOfBirth.Format("2006-01-02"),
+			Nationality: author.Nationality,
+			Website:     &author.Website,
+			Twitter:     &author.Twitter,
+			Facebook:    &author.Facebook,
+			Linkedln:    &author.Linkedln,
+			PenName:     &author.PenName,
 		})
 	}
 
