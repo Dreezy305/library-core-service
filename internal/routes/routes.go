@@ -7,6 +7,9 @@ import (
 	AuthorHandler "github.com/dreezy305/library-core-service/internal/authors/handler"
 	AuthorRepository "github.com/dreezy305/library-core-service/internal/authors/repository"
 	AuthorService "github.com/dreezy305/library-core-service/internal/authors/service"
+	BookHandler "github.com/dreezy305/library-core-service/internal/books/handler"
+	BookRepository "github.com/dreezy305/library-core-service/internal/books/repository"
+	BookService "github.com/dreezy305/library-core-service/internal/books/service"
 	UserHandler "github.com/dreezy305/library-core-service/internal/users/handler"
 	UserRepository "github.com/dreezy305/library-core-service/internal/users/repository"
 	UserService "github.com/dreezy305/library-core-service/internal/users/service"
@@ -29,6 +32,11 @@ var authorHandler *AuthorHandler.AuthorHandler
 var authorService *AuthorService.AuthorService
 var authorRespository *AuthorRepository.AuthorRepository
 var authorGormRepo *AuthorRepository.GormAuthorRepository
+
+var bookHandler *BookHandler.BookHandler
+var bookService *BookService.BookService
+var bookRepository *BookRepository.BookRepository
+var bookGormRepo *BookRepository.GormBookRepository
 
 // health check route
 func HealthCheckRoute(app fiber.Router) {
@@ -80,13 +88,17 @@ func AuthorRoutes(app fiber.Router, db *gorm.DB) {
 
 // BOOK ROUTES
 func BookRoutes(app fiber.Router, db *gorm.DB) {
+	bookGormRepo := BookRepository.NewGormBookRepository(db)
+	bookRepo := BookRepository.NewBookRepository(bookGormRepo)
+	bookService := BookService.NewBookService(*bookRepo)
+	bookHandler := BookHandler.NewBookHandler(bookService)
 	// Define book-related routes here
-	// bookGroup := app.Group("/books")
-	// bookGroup.Get("/")
-	// bookGroup.Get("/:id")
-	// bookGroup.Post("/books")
-	// bookGroup.Put("/:id")
-	// bookGroup.Delete("/:id")
+	bookGroup := app.Group("/books")
+	bookGroup.Get("/", bookHandler.GetBooks)
+	bookGroup.Get("/:id", bookHandler.GetBook)
+	bookGroup.Post("/create", bookHandler.CreateBook)
+	bookGroup.Put("/:id", bookHandler.UpdateBook)
+	// bookGroup.Delete("/:id", bookHandler.DeleteBook)
 	// bookGroup.Post("/:id/borrow")
 	// bookGroup.Post("/:id/return")
 	// bookGroup.Post("/:id/review")

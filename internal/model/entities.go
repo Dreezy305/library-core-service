@@ -32,7 +32,7 @@ type BookEntity struct {
 	UpdatedAt       time.Time
 	DeletedAt       gorm.DeletedAt `gorm:"index"`
 
-	Member AuthorEntity `gorm:"foreignKey:AuthorID"`
+	Author AuthorEntity `gorm:"foreignKey:AuthorID"`
 }
 
 type AuthorEntity struct {

@@ -27,7 +27,7 @@ func Start() {
 	routes.AuthRoutes(api, database)
 	routes.UserRoutes(api, database)
 	routes.AuthorRoutes(api, database)
-	// routes.BookRoutes(api)
+	routes.BookRoutes(api, database)
 	// routes.LoanRoutes(api)
 
 	// Implementation of server start logic goes here

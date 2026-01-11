@@ -142,3 +142,34 @@ type UpdateAuthorPayload struct {
 	Linkedln    *string `json:"linkedln,omitempty"`
 	PenName     *string `json:"penName,omitempty"`
 }
+
+type BookPayload struct {
+	Title         string  `json:"title"`
+	Description   *string `json:"description,omitempty"`
+	AuthorID      string  `json:"authorId"`
+	ISBN          *string `json:"isbn,omitempty"`
+	PublishedYear *int    `json:"publishedYear,omitempty"`
+	CopiesTotal   int     `json:"copiesTotal"`
+}
+
+type BookResponse struct {
+	ID              string    `json:"id"`
+	Title           string    `json:"title"`
+	Description     *string   `json:"description,omitempty"`
+	AuthorID        string    `json:"authorId"`
+	ISBN            *string   `json:"isbn,omitempty"`
+	PublishedYear   *int      `json:"publishedYear,omitempty"`
+	CopiesTotal     int       `json:"copiesTotal"`
+	CopiesAvailable int       `json:"copiesAvailable"`
+	CreatedAt       time.Time `json:"createdAt"`
+	UpdatedAt       time.Time `json:"updatedAt"`
+}
+
+type UpdateBookPayload struct {
+	Title         *string `json:"title,omitempty"`
+	Description   *string `json:"description,omitempty"`
+	AuthorID      *string `json:"authorId,omitempty"`
+	ISBN          *string `json:"isbn,omitempty"`
+	PublishedYear *int    `json:"publishedYear,omitempty"`
+	CopiesTotal   *int    `json:"copiesTotal,omitempty"`
+}
