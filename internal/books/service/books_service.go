@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/dreezy305/library-core-service/internal/books/repository"
 	"github.com/dreezy305/library-core-service/internal/model"
+	"github.com/dreezy305/library-core-service/internal/types"
 )
 
 type BookService struct {
@@ -21,8 +22,8 @@ func (s *BookService) CreateBook(b *model.BookEntity) error {
 	return s.repo.CreateBook(b)
 }
 
-func (s *BookService) GetBooks() error {
-	return s.repo.GetBooks()
+func (s *BookService) GetBooks(page int, limit int) ([]*types.BookResponse, int64, error) {
+	return s.repo.GetBooks(page, limit)
 }
 
 func (s *BookService) GetBook(bookId string) error {

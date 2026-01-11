@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/dreezy305/library-core-service/internal/model"
+	"github.com/dreezy305/library-core-service/internal/types"
 	"gorm.io/gorm"
 )
 
@@ -37,8 +38,8 @@ func (r *GormBookRepository) CreateBook(b *model.BookEntity) error {
 	return nil
 }
 
-func (r *GormBookRepository) GetBooks() error {
-	return nil
+func (r *GormBookRepository) GetBooks(page int, limit int) ([]*types.BookResponse, int64, error) {
+	return nil, 0, nil
 }
 
 func (r *GormBookRepository) GetBook(bookId string) error {

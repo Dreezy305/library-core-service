@@ -1,6 +1,9 @@
 package repository
 
-import "github.com/dreezy305/library-core-service/internal/model"
+import (
+	"github.com/dreezy305/library-core-service/internal/model"
+	"github.com/dreezy305/library-core-service/internal/types"
+)
 
 type BookRepository struct {
 	gormRepo *GormBookRepository
@@ -18,8 +21,8 @@ func (s *BookRepository) CreateBook(b *model.BookEntity) error {
 	return s.gormRepo.CreateBook(b)
 }
 
-func (s *BookRepository) GetBooks() error {
-	return s.gormRepo.GetBooks()
+func (s *BookRepository) GetBooks(page int, limit int) ([]*types.BookResponse, int64, error) {
+	return s.gormRepo.GetBooks(page, limit)
 }
 
 func (s *BookRepository) GetBook(bookId string) error {

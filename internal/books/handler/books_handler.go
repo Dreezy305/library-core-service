@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/dreezy305/library-core-service/internal/books/service"
 	"github.com/dreezy305/library-core-service/internal/model"
@@ -19,7 +20,26 @@ func NewBookHandler(service *service.BookService) *BookHandler {
 }
 
 func (h *BookHandler) GetBooks(c fiber.Ctx) error {
-	return h.service.GetBooks()
+	queries := c.Queries()
+
+	page, err := strconv.Atoi(queries["page"])
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Invalid value for paramater page"})
+	}
+
+	limit, errr := strconv.Atoi(queries["limit"])
+
+	if errr != nil {
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Invalid value for paramater limit"})
+	}
+
+	books, count, err := h.service.GetBooks(page, limit)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to retrieve books"})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"books": books, "count": count})
 }
 
 func (h *BookHandler) GetBook(c fiber.Ctx) error {
