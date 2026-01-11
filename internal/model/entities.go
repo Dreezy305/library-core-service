@@ -32,7 +32,8 @@ type BookEntity struct {
 	UpdatedAt       time.Time
 	DeletedAt       gorm.DeletedAt `gorm:"index"`
 
-	Author AuthorEntity `gorm:"foreignKey:AuthorID"`
+	Author     AuthorEntity     `gorm:"foreignKey:AuthorID"`
+	Categories []CategoryEntity `gorm:"many2many:book_categories;"`
 }
 
 type AuthorEntity struct {
@@ -88,4 +89,17 @@ type PasswordResetTokenEntity struct {
 	UpdatedAt time.Time
 
 	User UserEntity `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE"`
+}
+
+type CategoryEntity struct {
+	ID          string `gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
+	Name        string `gorm:"not null;uniqueIndex"`
+	Slug        string `gorm:"not null;uniqueIndex"`
+	Description *string
+
+	IsActive bool `gorm:"default:true"`
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 }

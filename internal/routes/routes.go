@@ -118,7 +118,7 @@ func LoanRoutes(app fiber.Router, db *gorm.DB) {
 }
 
 // BOOK CATEGORIES ROUTES
-func BookCategoryRoutes(app fiber.Router) {
+func BookCategoryRoutes(app fiber.Router, db *gorm.DB) {
 	// Define book category-related routes here
 	// categoryGroup := app.Group("/categories")
 	// categoryGroup.Get("/")
