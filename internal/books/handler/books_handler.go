@@ -99,5 +99,25 @@ func (h *BookHandler) CreateBook(c fiber.Ctx) error {
 }
 
 func (h *BookHandler) UpdateBook(c fiber.Ctx) error {
-	return h.service.UpdateBook()
+	var payload types.BookPayload
+
+	bookId := c.Params("id")
+	if bookId == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "id parameter is missing"})
+	}
+
+	if err := c.Bind().Body(&payload); err != nil {
+		fmt.Println(err)
+		return c.Status(fiber.StatusForbidden).JSON(validators.FormatValidationError(err))
+	}
+
+	errs := validators.ValidateStruct(payload)
+	if errs != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(validators.FormatValidationError(errs))
+	}
+	er := h.service.UpdateBook(bookId, &payload)
+	if er != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to update book"})
+	}
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Book updated successfully"})
 }

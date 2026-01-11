@@ -29,6 +29,6 @@ func (s *BookRepository) GetBook(bookId string) (*types.BookResponse, error) {
 	return s.gormRepo.GetBook(bookId)
 }
 
-func (s *BookRepository) UpdateBook() error {
-	return s.gormRepo.UpdateBook()
+func (s *BookRepository) UpdateBook(bookId string, payload *types.BookPayload) error {
+	return s.gormRepo.UpdateBook(bookId, payload)
 }
