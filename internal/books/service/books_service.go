@@ -26,7 +26,7 @@ func (s *BookService) GetBooks(page int, limit int) ([]*types.BookResponse, int6
 	return s.repo.GetBooks(page, limit)
 }
 
-func (s *BookService) GetBook(bookId string) error {
+func (s *BookService) GetBook(bookId string) (*types.BookResponse, error) {
 	return s.repo.GetBook(bookId)
 }
 

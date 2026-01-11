@@ -25,7 +25,7 @@ func (s *BookRepository) GetBooks(page int, limit int) ([]*types.BookResponse, i
 	return s.gormRepo.GetBooks(page, limit)
 }
 
-func (s *BookRepository) GetBook(bookId string) error {
+func (s *BookRepository) GetBook(bookId string) (*types.BookResponse, error) {
 	return s.gormRepo.GetBook(bookId)
 }
 

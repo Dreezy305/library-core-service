@@ -88,8 +88,34 @@ func (r *GormBookRepository) GetBooks(page int, limit int) ([]*types.BookRespons
 	return response, total, nil
 }
 
-func (r *GormBookRepository) GetBook(bookId string) error {
-	return nil
+func (r *GormBookRepository) GetBook(bookId string) (*types.BookResponse, error) {
+	var book model.BookEntity
+
+	err := r.DB.Preload("Author").Where("id = ?", bookId).Find(&book).Error
+	if err != nil {
+		return nil, err
+	}
+
+	response := &types.BookResponse{
+		ID:              book.ID,
+		Title:           book.Title,
+		Description:     &book.Description,
+		ISBN:            book.ISBN,
+		PublishedYear:   &book.PublishedYear,
+		CopiesTotal:     book.CopiesTotal,
+		CopiesAvailable: book.CopiesAvailable,
+		CreatedAt:       book.CreatedAt,
+		Author: &types.AuthorResponse{
+			ID:          book.Author.ID,
+			FirstName:   book.Author.FirstName,
+			LastName:    book.Author.LastName,
+			DateOfBirth: book.Author.DateOfBirth.Format("2006-01-02"),
+			Nationality: book.Author.Nationality,
+			Email:       *book.Author.Email,
+		},
+	}
+
+	return response, nil
 }
 
 func (r *GormBookRepository) UpdateBook() error {

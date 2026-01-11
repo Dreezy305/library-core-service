@@ -44,7 +44,14 @@ func (h *BookHandler) GetBooks(c fiber.Ctx) error {
 
 func (h *BookHandler) GetBook(c fiber.Ctx) error {
 	bookId := c.Params("id")
-	return h.service.GetBook(bookId)
+	if bookId == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "id parameter is missing"})
+	}
+	book, err := h.service.GetBook(bookId)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Failed to retrieve book"})
+	}
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Book fetched successfully", "data": fiber.Map{"book": book}})
 }
 
 func (h *BookHandler) CreateBook(c fiber.Ctx) error {
