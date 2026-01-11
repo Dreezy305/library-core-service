@@ -36,10 +36,10 @@ func (h *BookHandler) GetBooks(c fiber.Ctx) error {
 
 	books, count, err := h.service.GetBooks(page, limit)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to retrieve books"})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Failed to retrieve books"})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{"books": books, "count": count})
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Books fetched successfully", "data": fiber.Map{"books": books, "meta": fiber.Map{"total": count, "page": page, "limit": limit}}})
 }
 
 func (h *BookHandler) GetBook(c fiber.Ctx) error {

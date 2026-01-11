@@ -163,6 +163,8 @@ type BookResponse struct {
 	CopiesAvailable int       `json:"copiesAvailable"`
 	CreatedAt       time.Time `json:"createdAt"`
 	UpdatedAt       time.Time `json:"updatedAt"`
+
+	Author *AuthorResponse `json:"author,omitempty"`
 }
 
 type UpdateBookPayload struct {

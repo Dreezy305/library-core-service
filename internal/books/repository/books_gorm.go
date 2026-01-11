@@ -49,7 +49,7 @@ func (r *GormBookRepository) GetBooks(page int, limit int) ([]*types.BookRespons
 
 	offset := (page - 1) * limit
 
-	err := r.DB.Model(&model.BookEntity{}).Find(&books).Offset(offset).Limit(limit).Error
+	err := r.DB.Preload("Author").Model(&model.BookEntity{}).Find(&books).Offset(offset).Limit(limit).Error
 
 	if err != nil {
 		return nil, 0, err
@@ -63,6 +63,7 @@ func (r *GormBookRepository) GetBooks(page int, limit int) ([]*types.BookRespons
 
 	var response []*types.BookResponse
 	for i, book := range books {
+
 		response = append(response, &types.BookResponse{
 			ID:              book.ID,
 			Title:           book.Title,
@@ -73,6 +74,14 @@ func (r *GormBookRepository) GetBooks(page int, limit int) ([]*types.BookRespons
 			AuthorID:        book.AuthorID,
 			CopiesAvailable: book.CopiesAvailable,
 			CreatedAt:       book.CreatedAt,
+			Author: &types.AuthorResponse{
+				ID:          book.Author.ID,
+				FirstName:   book.Author.FirstName,
+				LastName:    book.Author.LastName,
+				Email:       *book.Author.Email,
+				Nationality: book.Author.Nationality,
+				DateOfBirth: book.Author.DateOfBirth.Format("2006-01-02"),
+			},
 		})
 		books[i] = book
 	}
