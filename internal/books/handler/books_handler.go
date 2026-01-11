@@ -49,11 +49,18 @@ func (h *BookHandler) CreateBook(c fiber.Ctx) error {
 	}
 
 	b := &model.BookEntity{
-		Title:         payload.Title,
-		Description:   *payload.Description,
-		ISBN:          payload.ISBN,
-		PublishedYear: *payload.PublishedYear,
-		CopiesTotal:   payload.CopiesTotal,
+		Title:       payload.Title,
+		ISBN:        payload.ISBN,
+		CopiesTotal: payload.CopiesTotal,
+		AuthorID:    payload.AuthorID,
+	}
+
+	if payload.Description != nil {
+		b.Description = *payload.Description
+	}
+
+	if payload.PublishedYear != nil {
+		b.PublishedYear = *payload.PublishedYear
 	}
 
 	error := h.service.CreateBook(b)
