@@ -27,7 +27,6 @@ func Start() {
 	routes.AuthRoutes(api, database)
 	routes.UserRoutes(api, database)
 	routes.AuthorRoutes(api, database)
-
 	// routes.BookRoutes(api)
 	// routes.LoanRoutes(api)
 
