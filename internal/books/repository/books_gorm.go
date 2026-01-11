@@ -39,7 +39,44 @@ func (r *GormBookRepository) CreateBook(b *model.BookEntity) error {
 }
 
 func (r *GormBookRepository) GetBooks(page int, limit int) ([]*types.BookResponse, int64, error) {
-	return nil, 0, nil
+	var total int64
+	var books []*model.BookEntity
+
+	if page <= 0 || limit <= 0 {
+		page = 1
+		limit = 1
+	}
+
+	offset := (page - 1) * limit
+
+	err := r.DB.Model(&model.BookEntity{}).Find(&books).Offset(offset).Limit(limit).Error
+
+	if err != nil {
+		return nil, 0, err
+	}
+
+	errr := r.DB.Model(&model.BookEntity{}).Count(&total).Error
+
+	if errr != nil {
+		return nil, 0, errr
+	}
+
+	var response []*types.BookResponse
+	for i, book := range books {
+		response = append(response, &types.BookResponse{
+			ID:              book.ID,
+			Title:           book.Title,
+			Description:     &book.Description,
+			ISBN:            book.ISBN,
+			PublishedYear:   &book.PublishedYear,
+			CopiesTotal:     book.CopiesTotal,
+			AuthorID:        book.AuthorID,
+			CopiesAvailable: book.CopiesAvailable,
+			CreatedAt:       book.CreatedAt,
+		})
+		books[i] = book
+	}
+	return response, total, nil
 }
 
 func (r *GormBookRepository) GetBook(bookId string) error {

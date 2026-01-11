@@ -78,6 +78,7 @@ func AuthorRoutes(app fiber.Router, db *gorm.DB) {
 	authorRepo := AuthorRepository.NewAuthorRepository(authorGormRepo)
 	authorService := AuthorService.NewAuthorService(*authorRepo)
 	authorHandler := AuthorHandler.NewAuthorHandler(authorService)
+
 	// Define author-related routes here
 	authorGroup := app.Group("/authors")
 	authorGroup.Get("/", authorHandler.GetAuthors)
@@ -92,6 +93,7 @@ func BookRoutes(app fiber.Router, db *gorm.DB) {
 	bookRepo := BookRepository.NewBookRepository(bookGormRepo)
 	bookService := BookService.NewBookService(*bookRepo)
 	bookHandler := BookHandler.NewBookHandler(bookService)
+
 	// Define book-related routes here
 	bookGroup := app.Group("/books")
 	bookGroup.Get("/", bookHandler.GetBooks)
