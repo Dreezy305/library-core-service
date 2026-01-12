@@ -1,6 +1,9 @@
 package repository
 
-import "gorm.io/gorm"
+import (
+	"github.com/dreezy305/library-core-service/internal/types"
+	"gorm.io/gorm"
+)
 
 type GormLoanRepository struct {
 	DB *gorm.DB
@@ -15,8 +18,14 @@ func (r *GormLoanRepository) CreateLoan(memberId string, bookId string) error {
 	return nil
 }
 
-func (r *GormLoanRepository) GetLoans() {}
+func (r *GormLoanRepository) GetLoans() ([]*types.LoanResponse, error) {
+	return nil, nil
+}
 
-func (r *GormLoanRepository) ReturnBook() {}
+func (r *GormLoanRepository) ReturnBook(loanId string, bookId string, memberId string) error {
+	return nil
+}
 
-func (r *GormLoanRepository) GetMemberLoans() {}
+func (r *GormLoanRepository) GetMemberLoans(memberId string) error {
+	return nil
+}
