@@ -194,3 +194,15 @@ type CategoryResponse struct {
 type UpdateCategoryPayload struct {
 	Name *string `json:"name,omitempty"`
 }
+
+type LoanResponse struct {
+	ID         string        `json:"id"`
+	MemberID   uint          `json:"memberId"`
+	BookID     string        `json:"bookId"`
+	Status     string        `json:"status"`
+	LoanDate   time.Time     `json:"loanDate"`
+	DueDate    time.Time     `json:"dueDate"`
+	ReturnedAt *time.Time    `json:"returnedAt,omitempty"`
+	Member     *UserResponse `json:"member,omitempty"`
+	Book       *BookResponse `json:"book,omitempty"`
+}

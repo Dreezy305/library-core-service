@@ -10,8 +10,9 @@ func NewGormLoanRepository(db *gorm.DB) *GormLoanRepository {
 	return &GormLoanRepository{DB: db}
 }
 
-func (r *GormLoanRepository) CreateLoan() {
+func (r *GormLoanRepository) CreateLoan(memberId string, bookId string) error {
 	// Dummy method to illustrate structure
+	return nil
 }
 
 func (r *GormLoanRepository) GetLoans() {}
