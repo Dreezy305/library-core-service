@@ -33,11 +33,15 @@ func (h *CategoryHandler) CreateCategory(c fiber.Ctx) error {
 	}
 
 	cModel := &model.CategoryEntity{
-		Name:        payload.Name,
-		Description: payload.Description,
+		Name: payload.Name,
+	}
+
+	if payload.Description != nil {
+		cModel.Description = payload.Description
 	}
 
 	error := h.Service.CreateCategory(cModel)
+
 	if error != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to create category"})
 	}
