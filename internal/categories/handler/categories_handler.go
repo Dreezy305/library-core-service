@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/dreezy305/library-core-service/internal/categories/service"
 	"github.com/dreezy305/library-core-service/internal/model"
@@ -38,8 +39,11 @@ func (h *CategoryHandler) CreateCategory(c fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Category already exists"})
 	}
 
+	slug := strings.ToLower(strings.ReplaceAll(payload.Name, " ", "-"))
+
 	cModel := &model.CategoryEntity{
 		Name: payload.Name,
+		Slug: slug,
 	}
 
 	if payload.Description != nil {

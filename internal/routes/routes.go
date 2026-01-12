@@ -10,6 +10,9 @@ import (
 	BookHandler "github.com/dreezy305/library-core-service/internal/books/handler"
 	BookRepository "github.com/dreezy305/library-core-service/internal/books/repository"
 	BookService "github.com/dreezy305/library-core-service/internal/books/service"
+	CategoryHandler "github.com/dreezy305/library-core-service/internal/categories/handler"
+	CategoryRepository "github.com/dreezy305/library-core-service/internal/categories/repository"
+	CategoryService "github.com/dreezy305/library-core-service/internal/categories/service"
 	UserHandler "github.com/dreezy305/library-core-service/internal/users/handler"
 	UserRepository "github.com/dreezy305/library-core-service/internal/users/repository"
 	UserService "github.com/dreezy305/library-core-service/internal/users/service"
@@ -37,6 +40,11 @@ var bookHandler *BookHandler.BookHandler
 var bookService *BookService.BookService
 var bookRepository *BookRepository.BookRepository
 var bookGormRepo *BookRepository.GormBookRepository
+
+var categoryHandler *CategoryHandler.CategoryHandler
+var categoryService *CategoryService.CategoryService
+var categoryRepository *CategoryRepository.CategoryRepository
+var categoryGormRepo *CategoryRepository.GormCategoryRepository
 
 // health check route
 func HealthCheckRoute(app fiber.Router) {
@@ -106,6 +114,29 @@ func BookRoutes(app fiber.Router, db *gorm.DB) {
 	// bookGroup.Post("/:id/review")
 }
 
+// BOOK CATEGORIES ROUTES
+func BookCategoryRoutes(app fiber.Router, db *gorm.DB) {
+	categoryGormRepo := CategoryRepository.NewGormCategoryRepository(db)
+	categoryRepo := CategoryRepository.NewCategoryRepository(categoryGormRepo)
+	categoryService := CategoryService.NewCategoryService(*categoryRepo)
+	categoryHandler := CategoryHandler.NewCategoryHandler(categoryService)
+
+	// Define book category-related routes here
+	categoryGroup := app.Group("/categories")
+	// categoryGroup.Get("/", categoryHandler.GetCategories)
+	// categoryGroup.Get("/:id", categoryHandler.GetCategory)
+	categoryGroup.Post("/create", categoryHandler.CreateCategory)
+	// categoryGroup.Put("/:id", categoryHandler.UpdateCategory)
+	// categoryGroup.Delete("/:id", categoryHandler.DeleteCategory)
+	// Define book category-related routes here
+	// categoryGroup := app.Group("/categories")
+	// categoryGroup.Get("/")
+	// categoryGroup.Get("/:id")
+	// categoryGroup.Post("/")
+	// categoryGroup.Put("/:id")
+	// categoryGroup.Delete("/:id")
+}
+
 // LOAN ROUTES
 func LoanRoutes(app fiber.Router, db *gorm.DB) {
 	// Define loan-related routes here
@@ -115,15 +146,4 @@ func LoanRoutes(app fiber.Router, db *gorm.DB) {
 	// loanGroup.Post("/")
 	// loanGroup.Put("/:id")
 	// loanGroup.Delete("/:id")
-}
-
-// BOOK CATEGORIES ROUTES
-func BookCategoryRoutes(app fiber.Router, db *gorm.DB) {
-	// Define book category-related routes here
-	// categoryGroup := app.Group("/categories")
-	// categoryGroup.Get("/")
-	// categoryGroup.Get("/:id")
-	// categoryGroup.Post("/")
-	// categoryGroup.Put("/:id")
-	// categoryGroup.Delete("/:id")
 }
