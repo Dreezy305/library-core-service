@@ -9,3 +9,13 @@ type GormLoanRepository struct {
 func NewGormLoanRepository(db *gorm.DB) *GormLoanRepository {
 	return &GormLoanRepository{DB: db}
 }
+
+func (r *GormLoanRepository) CreateLoan() {
+	// Dummy method to illustrate structure
+}
+
+func (r *GormLoanRepository) GetLoans() {}
+
+func (r *GormLoanRepository) ReturnBook() {}
+
+func (r *GormLoanRepository) GetMemberLoans() {}
