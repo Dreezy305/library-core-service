@@ -1,6 +1,11 @@
 package repository
 
-import "gorm.io/gorm"
+import (
+	"fmt"
+
+	"github.com/dreezy305/library-core-service/internal/model"
+	"gorm.io/gorm"
+)
 
 type GormCategoryRepository struct {
 	DB *gorm.DB
@@ -10,10 +15,13 @@ func NewGormCategoryRepository(db *gorm.DB) *GormCategoryRepository {
 	return &GormCategoryRepository{DB: db}
 }
 
-// Implement methods for category repository
-
-func (r *GormCategoryRepository) CreateCategory(name string) error {
+func (r *GormCategoryRepository) CreateCategory(c *model.CategoryEntity) error {
 	// Implementation for creating a category
+	err := r.DB.Create(c).Error
+	if err != nil {
+		fmt.Println("create category error:", err)
+		return err
+	}
 	return nil
 }
 

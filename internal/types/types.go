@@ -175,3 +175,21 @@ type UpdateBookPayload struct {
 	PublishedYear *int    `json:"publishedYear,omitempty"`
 	CopiesTotal   *int    `json:"copiesTotal,omitempty"`
 }
+
+type CategoryPayload struct {
+	Name        string  `json:"name"`
+	Description *string `json:"description,omitempty"`
+}
+
+type CategoryResponse struct {
+	ID          string    `json:"id"`
+	Name        string    `json:"name"`
+	Description *string   `json:"description,omitempty"`
+	IsActive    bool      `json:"isActive"`
+	CreatedAt   time.Time `json:"createdAt"`
+	UpdatedAt   time.Time `json:"updatedAt"`
+}
+
+type UpdateCategoryPayload struct {
+	Name *string `json:"name,omitempty"`
+}
