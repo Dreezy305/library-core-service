@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/dreezy305/library-core-service/internal/categories/repository"
 	"github.com/dreezy305/library-core-service/internal/model"
+	"github.com/dreezy305/library-core-service/internal/types"
 )
 
 type CategoryService struct {
@@ -21,10 +22,10 @@ func (s *CategoryService) CreateCategory(c *model.CategoryEntity) error {
 	return s.repo.CreateCategory(c)
 }
 
-func (s *CategoryService) GetCategories() ([]string, error) {
+func (s *CategoryService) GetCategories() ([]*types.CategoryResponse, error) {
 	return s.repo.GetCategories()
 }
 
-func (s *CategoryService) DeleteCategory(name string) error {
-	return s.repo.DeleteCategory(name)
+func (s *CategoryService) DeleteCategory(categoryId string) error {
+	return s.repo.DeleteCategory(categoryId)
 }

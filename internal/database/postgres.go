@@ -15,6 +15,6 @@ func Connect(config *config.AppConfig) (*gorm.DB, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to database: %w", err)
 	}
-	db.AutoMigrate(&model.UserEntity{}, &model.BookEntity{}, &model.AuthorEntity{}, &model.LoanEntity{}, &model.PasswordResetTokenEntity{})
+	db.AutoMigrate(&model.UserEntity{}, &model.BookEntity{}, &model.AuthorEntity{}, &model.LoanEntity{}, &model.PasswordResetTokenEntity{}, &model.CategoryEntity{})
 	return db, nil
 }

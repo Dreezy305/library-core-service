@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/dreezy305/library-core-service/internal/model"
+	"github.com/dreezy305/library-core-service/internal/types"
 	"gorm.io/gorm"
 )
 
@@ -37,12 +38,23 @@ func (r *GormCategoryRepository) CreateCategory(c *model.CategoryEntity) error {
 	return nil
 }
 
-func (r *GormCategoryRepository) GetCategories() ([]string, error) {
+func (r *GormCategoryRepository) GetCategories() ([]*types.CategoryResponse, error) {
 	// Implementation for retrieving categories
-	return nil, nil
+	var categories []model.CategoryEntity
+	var response []*types.CategoryResponse
+	err := r.DB.Model(&model.CategoryEntity{}).Find(&categories).Error
+	for _, category := range categories {
+		response = append(response, &types.CategoryResponse{
+			ID:          category.ID,
+			Name:        category.Name,
+			Description: category.Description,
+			Slug:        category.Slug,
+		})
+	}
+	return response, err
 }
 
-func (r *GormCategoryRepository) DeleteCategory(name string) error {
+func (r *GormCategoryRepository) DeleteCategory(categoryId string) error {
 	// Implementation for deleting a category
-	return nil
+	return r.DB.Where("id = ?", categoryId).Delete(&model.CategoryEntity{}).Error
 }

@@ -123,18 +123,9 @@ func BookCategoryRoutes(app fiber.Router, db *gorm.DB) {
 
 	// Define book category-related routes here
 	categoryGroup := app.Group("/categories")
-	// categoryGroup.Get("/", categoryHandler.GetCategories)
-	// categoryGroup.Get("/:id", categoryHandler.GetCategory)
+	categoryGroup.Get("/", categoryHandler.GetCategories)
 	categoryGroup.Post("/create", categoryHandler.CreateCategory)
-	// categoryGroup.Put("/:id", categoryHandler.UpdateCategory)
-	// categoryGroup.Delete("/:id", categoryHandler.DeleteCategory)
-	// Define book category-related routes here
-	// categoryGroup := app.Group("/categories")
-	// categoryGroup.Get("/")
-	// categoryGroup.Get("/:id")
-	// categoryGroup.Post("/")
-	// categoryGroup.Put("/:id")
-	// categoryGroup.Delete("/:id")
+	categoryGroup.Delete("/delete/:id", categoryHandler.DeleteCategory)
 }
 
 // LOAN ROUTES

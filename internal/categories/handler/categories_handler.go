@@ -39,7 +39,10 @@ func (h *CategoryHandler) CreateCategory(c fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Category already exists"})
 	}
 
+	fmt.Println(payload, "payload")
+
 	slug := strings.ToLower(strings.ReplaceAll(payload.Name, " ", "-"))
+	fmt.Println(slug, "slug")
 
 	cModel := &model.CategoryEntity{
 		Name: payload.Name,
@@ -50,19 +53,33 @@ func (h *CategoryHandler) CreateCategory(c fiber.Ctx) error {
 		cModel.Description = payload.Description
 	}
 
+	fmt.Println(cModel, "model payload")
+
 	error := h.Service.CreateCategory(cModel)
 
 	if error != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to create category"})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Failed to create category"})
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": "Category created successfully"})
 }
 
-func (h *CategoryHandler) GetCategories() ([]string, error) {
-	return h.Service.GetCategories()
+func (h *CategoryHandler) GetCategories(c fiber.Ctx) error {
+	categories, err := h.Service.GetCategories()
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Failed to get categories"})
+	}
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"data": fiber.Map{"categories": categories}})
 }
 
-func (h *CategoryHandler) DeleteCategory(name string) error {
-	return h.Service.DeleteCategory(name)
+func (h *CategoryHandler) DeleteCategory(c fiber.Ctx) error {
+	categoryId := c.Params("id")
+	if categoryId == "" {
+		return fmt.Errorf("id parameter is missing")
+	}
+	error := h.Service.DeleteCategory(categoryId)
+	if error != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Failed to delete category"})
+	}
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Category deleted successfully"})
 }
