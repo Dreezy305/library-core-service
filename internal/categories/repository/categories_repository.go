@@ -10,6 +10,10 @@ func NewCategoryRepository(gormRepo *GormCategoryRepository) *CategoryRepository
 	return &CategoryRepository{gormRepo: gormRepo}
 }
 
+func (r *CategoryRepository) CategoryExists(name string) (bool, error) {
+	return r.gormRepo.CategoryExists(name)
+}
+
 func (r *CategoryRepository) CreateCategory(c *model.CategoryEntity) error {
 	return r.gormRepo.CreateCategory(c)
 }

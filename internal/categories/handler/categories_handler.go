@@ -32,6 +32,12 @@ func (h *CategoryHandler) CreateCategory(c fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(validators.FormatValidationError(errs))
 	}
 
+	exists, _ := h.Service.CategoryExists(payload.Name)
+
+	if exists {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Category already exists"})
+	}
+
 	cModel := &model.CategoryEntity{
 		Name: payload.Name,
 	}

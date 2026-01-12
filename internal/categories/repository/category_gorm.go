@@ -15,6 +15,18 @@ func NewGormCategoryRepository(db *gorm.DB) *GormCategoryRepository {
 	return &GormCategoryRepository{DB: db}
 }
 
+func (r *GormCategoryRepository) CategoryExists(name string) (bool, error) {
+	// Implementation for checking if a category exists
+	var count int64
+	err := r.DB.Model(&model.CategoryEntity{}).Where("name = ?", name).Count(&count).Error
+
+	if err != nil {
+		return false, err
+	}
+
+	return count > 0, nil
+}
+
 func (r *GormCategoryRepository) CreateCategory(c *model.CategoryEntity) error {
 	// Implementation for creating a category
 	err := r.DB.Create(c).Error

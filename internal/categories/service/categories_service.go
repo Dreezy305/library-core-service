@@ -13,6 +13,10 @@ func NewCategoryService(repo repository.CategoryRepository) *CategoryService {
 	return &CategoryService{repo: repo}
 }
 
+func (s *CategoryService) CategoryExists(name string) (bool, error) {
+	return s.repo.CategoryExists(name)
+}
+
 func (s *CategoryService) CreateCategory(c *model.CategoryEntity) error {
 	return s.repo.CreateCategory(c)
 }
