@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	BookRepository "github.com/dreezy305/library-core-service/internal/books/repository"
@@ -62,13 +63,15 @@ func (s *LoansService) CreateLoan(memberId string, bookId string, payload types.
 
 	er := s.loansRepo.CreateLoan(memberId, bookId, *loan)
 	if er != nil {
-		return er
+		fmt.Println(er)
+		return errors.New("failed to create loan")
 	}
 
 	// decrement available copies
 	err = s.bookRepo.DecrementAvailable(bookId)
 	if err != nil {
-		return errors.New("failed to decrement available copies")
+		fmt.Println(err)
+		return errors.New("failed to create loan")
 	}
 
 	return nil
