@@ -32,3 +32,11 @@ func (s *BookRepository) GetBook(bookId string) (*types.BookResponse, error) {
 func (s *BookRepository) UpdateBook(bookId string, payload *types.BookPayload) error {
 	return s.gormRepo.UpdateBook(bookId, payload)
 }
+
+func (s *BookRepository) DecrementAvailable(bookId string) error {
+	return s.gormRepo.DecrementAvailable(bookId)
+}
+
+func (s *BookRepository) IncrementAvailable(bookId string) error {
+	return s.gormRepo.IncrementAvailable(bookId)
+}

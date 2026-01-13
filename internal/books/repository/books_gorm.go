@@ -146,3 +146,19 @@ func (r *GormBookRepository) UpdateBook(bookId string, payload *types.BookPayloa
 	}
 	return nil
 }
+
+func (r *GormBookRepository) DecrementAvailable(bookId string) error {
+	err := r.DB.Model(&model.BookEntity{}).Where("id = ? AND copies_available > 0", bookId).Update("copies_available", gorm.Expr("copies_available - 1")).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *GormBookRepository) IncrementAvailable(bookId string) error {
+	err := r.DB.Model(&model.BookEntity{}).Where("id = ? AND copies_available < copies_total", bookId).Update("copies_available", gorm.Expr("copies_available + 1")).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}

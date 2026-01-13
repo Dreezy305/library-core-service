@@ -33,3 +33,11 @@ func (s *BookService) GetBook(bookId string) (*types.BookResponse, error) {
 func (s *BookService) UpdateBook(bookId string, payload *types.BookPayload) error {
 	return s.repo.UpdateBook(bookId, payload)
 }
+
+func (s *BookService) DecrementAvailable(bookId string) error {
+	return s.repo.DecrementAvailable(bookId)
+}
+
+func (s *BookService) IncrementAvailable(bookId string) error {
+	return s.repo.IncrementAvailable(bookId)
+}

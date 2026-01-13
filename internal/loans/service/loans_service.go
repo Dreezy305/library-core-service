@@ -60,7 +60,18 @@ func (s *LoansService) CreateLoan(memberId string, bookId string, payload types.
 		Status:   string(constants.LoanActive),
 	}
 
-	return s.loansRepo.CreateLoan(memberId, bookId, *loan)
+	er := s.loansRepo.CreateLoan(memberId, bookId, *loan)
+	if er != nil {
+		return er
+	}
+
+	// decrement available copies
+	err = s.bookRepo.DecrementAvailable(bookId)
+	if err != nil {
+		return errors.New("failed to decrement available copies")
+	}
+
+	return nil
 }
 
 func (s *LoansService) GetLoans() ([]*types.LoanResponse, error) {
