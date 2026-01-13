@@ -10,8 +10,8 @@ func NewLoansRepository(gormRepo *GormLoanRepository) *LoansRepository {
 	return &LoansRepository{gormRepo: gormRepo}
 }
 
-func (r *LoansRepository) CreateLoan(memberId string, bookId string) error {
-	return r.gormRepo.CreateLoan(memberId, bookId)
+func (r *LoansRepository) CreateLoan(memberId string, bookId string, payload types.LoanPayload) error {
+	return r.gormRepo.CreateLoan(memberId, bookId, payload)
 }
 
 func (r *LoansRepository) GetLoans() ([]*types.LoanResponse, error) {

@@ -13,6 +13,9 @@ import (
 	CategoryHandler "github.com/dreezy305/library-core-service/internal/categories/handler"
 	CategoryRepository "github.com/dreezy305/library-core-service/internal/categories/repository"
 	CategoryService "github.com/dreezy305/library-core-service/internal/categories/service"
+	LoansHandler "github.com/dreezy305/library-core-service/internal/loans/handler"
+	LoansRepository "github.com/dreezy305/library-core-service/internal/loans/repository"
+	LoansService "github.com/dreezy305/library-core-service/internal/loans/service"
 	UserHandler "github.com/dreezy305/library-core-service/internal/users/handler"
 	UserRepository "github.com/dreezy305/library-core-service/internal/users/repository"
 	UserService "github.com/dreezy305/library-core-service/internal/users/service"
@@ -45,6 +48,11 @@ var categoryHandler *CategoryHandler.CategoryHandler
 var categoryService *CategoryService.CategoryService
 var categoryRepository *CategoryRepository.CategoryRepository
 var categoryGormRepo *CategoryRepository.GormCategoryRepository
+
+var loanHandler *LoansHandler.LoansHandler
+var loanService *LoansService.LoansService
+var loanRepository *LoansRepository.LoansRepository
+var loanGormRepo *LoansRepository.GormLoanRepository
 
 // health check route
 func HealthCheckRoute(app fiber.Router) {
@@ -127,6 +135,10 @@ func BookCategoryRoutes(app fiber.Router, db *gorm.DB) {
 
 // LOAN ROUTES
 func LoanRoutes(app fiber.Router, db *gorm.DB) {
+	loanGormRepo := LoansRepository.NewGormLoanRepository(db)
+	loanRepo := LoansRepository.NewLoansRepository(loanGormRepo)
+	loanService := LoansService.NewLoansService(*loanRepo)
+	loanHandler := LoansHandler.NewLoansHandler(loanService)
 	// Define loan-related routes here
 	// loanGroup := app.Group("/loans")
 	// loanGroup.Get("/")
