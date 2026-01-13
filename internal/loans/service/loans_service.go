@@ -3,6 +3,7 @@ package service
 import (
 	"errors"
 
+	BookRepository "github.com/dreezy305/library-core-service/internal/books/repository"
 	"github.com/dreezy305/library-core-service/internal/loans/repository"
 	"github.com/dreezy305/library-core-service/internal/types"
 	UserRepository "github.com/dreezy305/library-core-service/internal/users/repository"
@@ -16,10 +17,11 @@ const (
 type LoansService struct {
 	loansRepo repository.LoansRepository
 	userRepo  UserRepository.UserRepository
+	bookRepo  BookRepository.BookRepository
 }
 
-func NewLoansService(loansRepo repository.LoansRepository, userRepo UserRepository.UserRepository) *LoansService {
-	return &LoansService{loansRepo: loansRepo, userRepo: userRepo}
+func NewLoansService(loansRepo repository.LoansRepository, userRepo UserRepository.UserRepository, bookRepo BookRepository.BookRepository) *LoansService {
+	return &LoansService{loansRepo: loansRepo, userRepo: userRepo, bookRepo: bookRepo}
 }
 
 func (s *LoansService) CreateLoan(memberId string, bookId string, payload types.LoanPayload) error {

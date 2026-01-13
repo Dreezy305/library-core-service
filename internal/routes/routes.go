@@ -137,9 +137,13 @@ func BookCategoryRoutes(app fiber.Router, db *gorm.DB) {
 func LoanRoutes(app fiber.Router, db *gorm.DB) {
 	userGormRepo = UserRepository.NewGormUserRepository(db)
 	userRepo := UserRepository.NewUserRepository(userGormRepo)
+
+	bookGormRepo := BookRepository.NewGormBookRepository(db)
+	bookRepo := BookRepository.NewBookRepository(bookGormRepo)
+
 	loanGormRepo := LoansRepository.NewGormLoanRepository(db)
 	loanRepo := LoansRepository.NewLoansRepository(loanGormRepo)
-	loanService := LoansService.NewLoansService(*loanRepo, *userRepo)
+	loanService := LoansService.NewLoansService(*loanRepo, *userRepo, *bookRepo)
 	loanHandler := LoansHandler.NewLoansHandler(loanService)
 
 	// Define loan-related routes here
