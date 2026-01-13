@@ -1,8 +1,11 @@
 package handler
 
 import (
+	"fmt"
+
 	"github.com/dreezy305/library-core-service/internal/loans/service"
 	"github.com/dreezy305/library-core-service/internal/types"
+	"github.com/dreezy305/library-core-service/internal/validators"
 	"github.com/gofiber/fiber/v3"
 )
 
@@ -17,8 +20,29 @@ func NewLoansHandler(service *service.LoansService) *LoansHandler {
 func (h *LoansHandler) CreateLoan(c fiber.Ctx) error {
 	memberId := c.Params("memberId")
 	bookId := c.Params("bookId")
+	if memberId == "" || bookId == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "memberId and bookId are required"})
+	}
 	var payload types.LoanPayload
-	return h.Service.CreateLoan(memberId, bookId, payload)
+	if err := c.Bind().Body(&payload); err != nil {
+		fmt.Println(err)
+		return c.Status(fiber.StatusForbidden).JSON(validators.FormatValidationError(err))
+	}
+
+	fmt.Println(payload)
+
+	errs := validators.ValidateStruct(payload)
+	if errs != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(validators.FormatValidationError(errs))
+	}
+
+	error := h.Service.CreateLoan(memberId, bookId, payload)
+
+	if error != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to create loan"})
+	}
+
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": "Loan created successfully"})
 }
 
 func (h *LoansHandler) GetLoans(c fiber.Ctx) error {
