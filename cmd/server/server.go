@@ -29,7 +29,7 @@ func Start() {
 	routes.AuthorRoutes(api, database)
 	routes.BookRoutes(api, database)
 	routes.BookCategoryRoutes(api, database)
-	// routes.LoanRoutes(api)
+	routes.LoanRoutes(api, database)
 
 	// Implementation of server start logic goes here
 	fmt.Println("Server started")
