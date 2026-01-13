@@ -139,11 +139,11 @@ func LoanRoutes(app fiber.Router, db *gorm.DB) {
 	loanRepo := LoansRepository.NewLoansRepository(loanGormRepo)
 	loanService := LoansService.NewLoansService(*loanRepo)
 	loanHandler := LoansHandler.NewLoansHandler(loanService)
+
 	// Define loan-related routes here
-	// loanGroup := app.Group("/loans")
-	// loanGroup.Get("/")
-	// loanGroup.Get("/members/:id/loans")
-	// loanGroup.Post("/")
-	// loanGroup.Put("/:id")
-	// loanGroup.Delete("/:id")
+	loanGroup := app.Group("/loans")
+	loanGroup.Get("/", loanHandler.GetLoans)
+	loanGroup.Get("/members/:id/loans", loanHandler.GetMemberLoans)
+	loanGroup.Post("/:memberId/:bookId", loanHandler.CreateLoan)
+	loanGroup.Put("/:loanId/:memberId/:bookId", loanHandler.ReturnBook)
 }

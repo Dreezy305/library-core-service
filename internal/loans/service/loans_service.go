@@ -11,10 +11,10 @@ const (
 )
 
 type LoansService struct {
-	loansRepo *repository.LoansRepository
+	loansRepo repository.LoansRepository
 }
 
-func NewLoansService(loansRepo *repository.LoansRepository) *LoansService {
+func NewLoansService(loansRepo repository.LoansRepository) *LoansService {
 	return &LoansService{loansRepo: loansRepo}
 }
 
