@@ -3,7 +3,7 @@ package types
 import (
 	"time"
 
-	"github.com/dreezy305/library-core-service/internal/enums"
+	"github.com/dreezy305/library-core-service/internal/constants"
 )
 
 type UserType struct {
@@ -50,7 +50,7 @@ type Loan struct {
 	ID         string
 	UserID     uint
 	BookID     string
-	Status     enums.LoanStatus
+	Status     constants.LoanStatus
 	BorrowedAt time.Time
 	DueAt      time.Time
 	ReturnedAt *time.Time
@@ -205,4 +205,9 @@ type LoanResponse struct {
 	ReturnedAt *time.Time    `json:"returnedAt,omitempty"`
 	Member     *UserResponse `json:"member,omitempty"`
 	Book       *BookResponse `json:"book,omitempty"`
+}
+
+type LoanPayload struct {
+	LoanDate       string `json:"loanDate"`
+	DurationInDays int    `json:"duration"`
 }
