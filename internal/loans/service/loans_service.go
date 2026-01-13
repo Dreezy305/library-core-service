@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/dreezy305/library-core-service/internal/loans/repository"
 	"github.com/dreezy305/library-core-service/internal/types"
+	UserRepository "github.com/dreezy305/library-core-service/internal/users/repository"
 )
 
 const (
@@ -12,13 +13,16 @@ const (
 
 type LoansService struct {
 	loansRepo repository.LoansRepository
+	userRepo  UserRepository.UserRepository
 }
 
-func NewLoansService(loansRepo repository.LoansRepository) *LoansService {
-	return &LoansService{loansRepo: loansRepo}
+func NewLoansService(loansRepo repository.LoansRepository, userRepo UserRepository.UserRepository) *LoansService {
+	return &LoansService{loansRepo: loansRepo, userRepo: userRepo}
 }
 
 func (s *LoansService) CreateLoan(memberId string, bookId string, payload types.LoanPayload) error {
+	// check if member exists
+
 	return s.loansRepo.CreateLoan(memberId, bookId, payload)
 }
 
