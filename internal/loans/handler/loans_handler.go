@@ -23,10 +23,14 @@ func (h *LoansHandler) GetLoans(c fiber.Ctx) error {
 	return nil
 }
 
-func (h *LoansHandler) ReturnBook(loanId string, bookId string, memberId string) error {
-	return nil
+func (h *LoansHandler) ReturnBook(c fiber.Ctx) error {
+	loanId := c.Params("loanId")
+	bookId := c.Params("bookId")
+	memberId := c.Params("memberId")
+	return h.Service.ReturnBook(loanId, bookId, memberId)
 }
 
-func (h *LoansHandler) GetMemberLoans(memberId string) error {
+func (h *LoansHandler) GetMemberLoans(c fiber.Ctx) error {
+	memberId := c.Params("memberId")
 	return h.Service.GetMemberLoans(memberId)
 }
