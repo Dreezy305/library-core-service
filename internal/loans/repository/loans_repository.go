@@ -1,6 +1,9 @@
 package repository
 
-import "github.com/dreezy305/library-core-service/internal/types"
+import (
+	"github.com/dreezy305/library-core-service/internal/model"
+	"github.com/dreezy305/library-core-service/internal/types"
+)
 
 type LoansRepository struct {
 	gormRepo *GormLoanRepository
@@ -10,7 +13,7 @@ func NewLoansRepository(gormRepo *GormLoanRepository) *LoansRepository {
 	return &LoansRepository{gormRepo: gormRepo}
 }
 
-func (r *LoansRepository) CreateLoan(memberId string, bookId string, payload types.LoanPayload) error {
+func (r *LoansRepository) CreateLoan(memberId string, bookId string, payload model.LoanEntity) error {
 	return r.gormRepo.CreateLoan(memberId, bookId, payload)
 }
 

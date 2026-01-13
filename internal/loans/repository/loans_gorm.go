@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"github.com/dreezy305/library-core-service/internal/model"
 	"github.com/dreezy305/library-core-service/internal/types"
 	"gorm.io/gorm"
 )
@@ -13,7 +14,7 @@ func NewGormLoanRepository(db *gorm.DB) *GormLoanRepository {
 	return &GormLoanRepository{DB: db}
 }
 
-func (r *GormLoanRepository) CreateLoan(memberId string, bookId string, payload types.LoanPayload) error {
+func (r *GormLoanRepository) CreateLoan(memberId string, bookId string, payload model.LoanEntity) error {
 	// Dummy method to illustrate structure
 	return nil
 }

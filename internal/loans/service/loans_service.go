@@ -2,9 +2,12 @@ package service
 
 import (
 	"errors"
+	"time"
 
 	BookRepository "github.com/dreezy305/library-core-service/internal/books/repository"
+	"github.com/dreezy305/library-core-service/internal/constants"
 	"github.com/dreezy305/library-core-service/internal/loans/repository"
+	"github.com/dreezy305/library-core-service/internal/model"
 	"github.com/dreezy305/library-core-service/internal/types"
 	UserRepository "github.com/dreezy305/library-core-service/internal/users/repository"
 )
@@ -31,7 +34,33 @@ func (s *LoansService) CreateLoan(memberId string, bookId string, payload types.
 		return errors.New("member not found")
 	}
 
-	return s.loansRepo.CreateLoan(memberId, bookId, payload)
+	// check if book exists
+	book, err := s.bookRepo.GetBook(bookId)
+	if err != nil {
+		return errors.New("book not found")
+	}
+
+	if book.CopiesAvailable <= 0 {
+		return errors.New("no copies available for this book")
+	}
+
+	LoanDate := time.Now()
+	DueDate := LoanDate.AddDate(0, 0, payload.DurationInDays)
+
+	// validate loan days
+	if payload.DurationInDays < MinLoanDays || payload.DurationInDays > MaxLoanDays {
+		return errors.New("loan days must be between 1 and 14")
+	}
+
+	loan := &model.LoanEntity{
+		MemberID: memberId,
+		BookID:   bookId,
+		LoanDate: LoanDate,
+		DueDate:  DueDate,
+		Status:   string(constants.LoanActive),
+	}
+
+	return s.loansRepo.CreateLoan(memberId, bookId, *loan)
 }
 
 func (s *LoansService) GetLoans() ([]*types.LoanResponse, error) {

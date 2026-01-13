@@ -208,6 +208,5 @@ type LoanResponse struct {
 }
 
 type LoanPayload struct {
-	LoanDate       string `json:"loanDate"`
-	DurationInDays int    `json:"duration"`
+	DurationInDays int `json:"duration"`
 }
