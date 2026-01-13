@@ -1,6 +1,8 @@
 package service
 
 import (
+	"errors"
+
 	"github.com/dreezy305/library-core-service/internal/loans/repository"
 	"github.com/dreezy305/library-core-service/internal/types"
 	UserRepository "github.com/dreezy305/library-core-service/internal/users/repository"
@@ -22,6 +24,10 @@ func NewLoansService(loansRepo repository.LoansRepository, userRepo UserReposito
 
 func (s *LoansService) CreateLoan(memberId string, bookId string, payload types.LoanPayload) error {
 	// check if member exists
+	_, err := s.userRepo.GetUser(memberId)
+	if err != nil {
+		return errors.New("member not found")
+	}
 
 	return s.loansRepo.CreateLoan(memberId, bookId, payload)
 }
