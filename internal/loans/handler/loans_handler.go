@@ -80,5 +80,14 @@ func (h *LoansHandler) ReturnBook(c fiber.Ctx) error {
 
 func (h *LoansHandler) GetMemberLoans(c fiber.Ctx) error {
 	memberId := c.Params("memberId")
-	return h.Service.GetMemberLoans(memberId)
+	if memberId == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "memberId is required"})
+	}
+
+	member, total, err := h.Service.GetMemberLoans(memberId)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Failed to fetch member loans"})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Member loans fetched successfully", "data": fiber.Map{"loans": member, "meta": fiber.Map{"total": total}}})
 }

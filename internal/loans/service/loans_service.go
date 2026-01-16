@@ -94,6 +94,6 @@ func (s *LoansService) ReturnBook(loanId string, bookId string, memberId string)
 	return s.loansRepo.ReturnBook(loanId, bookId, memberId)
 }
 
-func (s *LoansService) GetMemberLoans(memberId string) error {
+func (s *LoansService) GetMemberLoans(memberId string) ([]*types.LoanResponse, int64, error) {
 	return s.loansRepo.GetMemberLoans(memberId)
 }

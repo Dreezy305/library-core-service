@@ -211,3 +211,7 @@ type LoanResponse struct {
 type LoanPayload struct {
 	DurationInDays int `json:"duration"`
 }
+
+type MemberLoansResponse struct {
+	Loans []*LoanResponse `json:"loans"`
+}

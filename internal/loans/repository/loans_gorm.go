@@ -76,6 +76,49 @@ func (r *GormLoanRepository) ReturnBook(loanId string, bookId string, memberId s
 	return nil
 }
 
-func (r *GormLoanRepository) GetMemberLoans(memberId string) error {
-	return nil
+func (r *GormLoanRepository) GetMemberLoans(memberId string) ([]*types.LoanResponse, int64, error) {
+	var loans []*model.LoanEntity
+	var response []*types.LoanResponse
+
+	err := r.DB.Where("member_id = ?", memberId).Find(&loans).Error
+	if err != nil {
+		return nil, 0, err
+	}
+
+	var total int64
+	errr := r.DB.Preload("Member").Preload("Book").Model(&model.LoanEntity{}).Count(&total).Error
+
+	if errr != nil {
+		return nil, 0, errr
+	}
+
+	for _, v := range loans {
+		response = append(response, &types.LoanResponse{
+			ID:         v.ID,
+			MemberID:   v.MemberID,
+			BookID:     v.BookID,
+			LoanDate:   v.LoanDate,
+			DueDate:    v.DueDate,
+			ReturnedAt: v.ReturnedAt,
+			Status:     v.Status,
+			Member: &types.UserResponse{
+				ID:        v.Member.ID,
+				FirstName: v.Member.FirstName,
+				LastName:  v.Member.LastName,
+				Email:     *v.Member.Email,
+			},
+			Book: &types.BookResponse{
+				ID:              v.Book.ID,
+				Title:           v.Book.Title,
+				Description:     &v.Book.Description,
+				AuthorID:        v.Book.AuthorID,
+				ISBN:            v.Book.ISBN,
+				PublishedYear:   &v.Book.PublishedYear,
+				CopiesTotal:     v.Book.CopiesTotal,
+				CopiesAvailable: v.Book.CopiesAvailable,
+			},
+		})
+	}
+
+	return response, total, nil
 }

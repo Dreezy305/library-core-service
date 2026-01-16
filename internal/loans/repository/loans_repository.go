@@ -29,6 +29,6 @@ func (r *LoansRepository) ReturnBook(loanId string, bookId string, memberId stri
 	return r.gormRepo.ReturnBook(loanId, bookId, memberId)
 }
 
-func (r *LoansRepository) GetMemberLoans(memberId string) error {
+func (r *LoansRepository) GetMemberLoans(memberId string) ([]*types.LoanResponse, int64, error) {
 	return r.gormRepo.GetMemberLoans(memberId)
 }
