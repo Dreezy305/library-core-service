@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/dreezy305/library-core-service/internal/loans/service"
 	"github.com/dreezy305/library-core-service/internal/types"
@@ -46,7 +47,28 @@ func (h *LoansHandler) CreateLoan(c fiber.Ctx) error {
 }
 
 func (h *LoansHandler) GetLoans(c fiber.Ctx) error {
-	return nil
+	queries := c.Queries()
+
+	page, err := strconv.Atoi(queries["page"])
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Invalid value for paramater page"})
+	}
+
+	limit, errr := strconv.Atoi(queries["limit"])
+
+	if errr != nil {
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Invalid value for paramater limit"})
+	}
+
+	loans, total, errrr := h.Service.GetLoans(page, limit)
+
+	if errrr != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Failed to fetch loans"})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Loans fetched successfully", "data": fiber.Map{"loans": loans, "meta": fiber.Map{"page": page, "limit": limit, "total": total}}})
+
 }
 
 func (h *LoansHandler) ReturnBook(c fiber.Ctx) error {

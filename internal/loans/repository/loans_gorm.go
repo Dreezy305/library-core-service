@@ -36,8 +36,40 @@ func (r *GormLoanRepository) GetLoanByMemberAndBook(memberId string, bookId stri
 	return &loan, nil
 }
 
-func (r *GormLoanRepository) GetLoans() ([]*types.LoanResponse, error) {
-	return nil, nil
+func (r *GormLoanRepository) GetLoans(page int, limit int) ([]*types.LoanResponse, int, error) {
+	var loans []*model.LoanEntity
+	var response []*types.LoanResponse
+	if page <= 0 || limit <= 0 {
+		page = 1
+		limit = 1
+	}
+
+	offset := (page - 1) * limit
+
+	err := r.DB.Model(&model.LoanEntity{}).Find(&loans).Limit(limit).Offset(offset).Error
+	if err != nil {
+		return nil, 0, err
+	}
+	var total int64
+	errr := r.DB.Model(&model.LoanEntity{}).Count(&total).Error
+
+	if errr != nil {
+		return nil, 0, errr
+	}
+
+	for _, v := range loans {
+		response = append(response, &types.LoanResponse{
+			ID:         v.ID,
+			MemberID:   v.MemberID,
+			BookID:     v.BookID,
+			LoanDate:   v.LoanDate,
+			DueDate:    v.DueDate,
+			ReturnedAt: v.ReturnedAt,
+			Status:     v.Status,
+		})
+	}
+
+	return response, int(total), nil
 }
 
 func (r *GormLoanRepository) ReturnBook(loanId string, bookId string, memberId string) error {

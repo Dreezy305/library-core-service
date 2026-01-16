@@ -149,7 +149,7 @@ func LoanRoutes(app fiber.Router, db *gorm.DB) {
 	// Define loan-related routes here
 	loanGroup := app.Group("/loans")
 	loanGroup.Get("/", loanHandler.GetLoans)
-	loanGroup.Get("/members/:id/loans", loanHandler.GetMemberLoans)
+	loanGroup.Get("/member/:memberId", loanHandler.GetMemberLoans)
 	loanGroup.Post("/:memberId/:bookId", loanHandler.CreateLoan)
 	loanGroup.Put("/:loanId/:memberId/:bookId", loanHandler.ReturnBook)
 }

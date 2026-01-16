@@ -198,7 +198,7 @@ type UpdateCategoryPayload struct {
 
 type LoanResponse struct {
 	ID         string        `json:"id"`
-	MemberID   uint          `json:"memberId"`
+	MemberID   string        `json:"memberId"`
 	BookID     string        `json:"bookId"`
 	Status     string        `json:"status"`
 	LoanDate   time.Time     `json:"loanDate"`

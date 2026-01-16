@@ -86,8 +86,8 @@ func (s *LoansService) CreateLoan(memberId string, bookId string, payload types.
 	return nil
 }
 
-func (s *LoansService) GetLoans() ([]*types.LoanResponse, error) {
-	return s.loansRepo.GetLoans()
+func (s *LoansService) GetLoans(page int, limit int) ([]*types.LoanResponse, int, error) {
+	return s.loansRepo.GetLoans(page, limit)
 }
 
 func (s *LoansService) ReturnBook(loanId string, bookId string, memberId string) error {
