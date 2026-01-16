@@ -36,10 +36,10 @@ func (h *LoansHandler) CreateLoan(c fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(validators.FormatValidationError(errs))
 	}
 
-	error := h.Service.CreateLoan(memberId, bookId, payload)
+	err := h.Service.CreateLoan(memberId, bookId, payload)
 
-	if error != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to create loan"})
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": err.Error()})
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": "Loan created successfully"})

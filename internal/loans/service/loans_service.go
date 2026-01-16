@@ -61,7 +61,7 @@ func (s *LoansService) CreateLoan(memberId string, bookId string, payload types.
 		Status:   string(constants.LoanActive),
 	}
 
-	er := s.loansRepo.CreateLoan(memberId, bookId, *loan)
+	er := s.loansRepo.CreateLoan(*loan)
 	if er != nil {
 		fmt.Println(er)
 		return errors.New("failed to create loan")

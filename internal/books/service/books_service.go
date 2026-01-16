@@ -30,7 +30,7 @@ func (s *BookService) GetBook(bookId string) (*types.BookResponse, error) {
 	return s.repo.GetBook(bookId)
 }
 
-func (s *BookService) UpdateBook(bookId string, payload *types.BookPayload) error {
+func (s *BookService) UpdateBook(bookId string, payload *types.UpdateBookPayload) error {
 	return s.repo.UpdateBook(bookId, payload)
 }
 

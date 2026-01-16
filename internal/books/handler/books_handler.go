@@ -99,7 +99,7 @@ func (h *BookHandler) CreateBook(c fiber.Ctx) error {
 }
 
 func (h *BookHandler) UpdateBook(c fiber.Ctx) error {
-	var payload types.BookPayload
+	var payload types.UpdateBookPayload
 
 	bookId := c.Params("id")
 	if bookId == "" {
