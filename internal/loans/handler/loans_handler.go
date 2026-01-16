@@ -95,6 +95,7 @@ func (h *LoansHandler) ReturnBook(c fiber.Ctx) error {
 	}
 
 	err := h.Service.ReturnBook(loanId, memberId, bookId)
+	
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": err.Error()})
 	}
