@@ -80,13 +80,13 @@ func (r *GormLoanRepository) GetMemberLoans(memberId string) ([]*types.LoanRespo
 	var loans []*model.LoanEntity
 	var response []*types.LoanResponse
 
-	err := r.DB.Where("member_id = ?", memberId).Find(&loans).Error
+	err := r.DB.Preload("Member").Preload("Book").Where("member_id = ?", memberId).Find(&loans).Error
 	if err != nil {
 		return nil, 0, err
 	}
 
 	var total int64
-	errr := r.DB.Preload("Member").Preload("Book").Model(&model.LoanEntity{}).Count(&total).Error
+	errr := r.DB.Model(&model.LoanEntity{}).Count(&total).Error
 
 	if errr != nil {
 		return nil, 0, errr
