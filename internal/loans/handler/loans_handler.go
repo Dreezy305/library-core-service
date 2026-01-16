@@ -58,7 +58,7 @@ func (h *LoansHandler) GetLoans(c fiber.Ctx) error {
 	limit, errr := strconv.Atoi(queries["limit"])
 
 	if errr != nil {
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Invalid value for paramater limit"})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Invalid value for paramater limit"})
 	}
 
 	loans, total, errrr := h.Service.GetLoans(page, limit)
@@ -89,6 +89,7 @@ func (h *LoansHandler) ReturnBook(c fiber.Ctx) error {
 	loanId := c.Params("loanId")
 	bookId := c.Params("bookId")
 	memberId := c.Params("memberId")
+
 	if loanId == "" || bookId == "" || memberId == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "loanId, bookId and memberId are required"})
 	}
