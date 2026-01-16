@@ -71,13 +71,6 @@ func (h *LoansHandler) GetLoans(c fiber.Ctx) error {
 
 }
 
-func (h *LoansHandler) ReturnBook(c fiber.Ctx) error {
-	loanId := c.Params("loanId")
-	bookId := c.Params("bookId")
-	memberId := c.Params("memberId")
-	return h.Service.ReturnBook(loanId, bookId, memberId)
-}
-
 func (h *LoansHandler) GetMemberLoans(c fiber.Ctx) error {
 	memberId := c.Params("memberId")
 	if memberId == "" {
@@ -90,4 +83,20 @@ func (h *LoansHandler) GetMemberLoans(c fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Member loans fetched successfully", "data": fiber.Map{"loans": member, "meta": fiber.Map{"total": total}}})
+}
+
+func (h *LoansHandler) ReturnBook(c fiber.Ctx) error {
+	loanId := c.Params("loanId")
+	bookId := c.Params("bookId")
+	memberId := c.Params("memberId")
+	if loanId == "" || bookId == "" || memberId == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "loanId, bookId and memberId are required"})
+	}
+
+	err := h.Service.ReturnBook(loanId, memberId, bookId)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": err.Error()})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Book returned successfully"})
 }

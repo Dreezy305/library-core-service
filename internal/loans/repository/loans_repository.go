@@ -25,8 +25,8 @@ func (r *LoansRepository) GetLoans(page int, limit int) ([]*types.LoanResponse, 
 	return r.gormRepo.GetLoans(page, limit)
 }
 
-func (r *LoansRepository) ReturnBook(loanId string, bookId string, memberId string) error {
-	return r.gormRepo.ReturnBook(loanId, bookId, memberId)
+func (r *LoansRepository) ReturnBook(loanId string, memberId string, bookId string) error {
+	return r.gormRepo.ReturnBook(loanId, memberId, bookId)
 }
 
 func (r *LoansRepository) GetMemberLoans(memberId string) ([]*types.LoanResponse, int64, error) {

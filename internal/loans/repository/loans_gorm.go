@@ -72,10 +72,6 @@ func (r *GormLoanRepository) GetLoans(page int, limit int) ([]*types.LoanRespons
 	return response, int(total), nil
 }
 
-func (r *GormLoanRepository) ReturnBook(loanId string, bookId string, memberId string) error {
-	return nil
-}
-
 func (r *GormLoanRepository) GetMemberLoans(memberId string) ([]*types.LoanResponse, int64, error) {
 	var loans []*model.LoanEntity
 	var response []*types.LoanResponse
@@ -121,4 +117,14 @@ func (r *GormLoanRepository) GetMemberLoans(memberId string) ([]*types.LoanRespo
 	}
 
 	return response, total, nil
+}
+
+func (r *GormLoanRepository) ReturnBook(loanId string, memberId string, bookId string) error {
+
+	err := r.DB.Model(&model.LoanEntity{}).Where("id = ? AND member_id = ? AND book_id = ?", loanId, memberId, bookId).Update("status", "returned").Error
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

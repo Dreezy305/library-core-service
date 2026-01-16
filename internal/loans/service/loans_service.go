@@ -90,8 +90,13 @@ func (s *LoansService) GetLoans(page int, limit int) ([]*types.LoanResponse, int
 	return s.loansRepo.GetLoans(page, limit)
 }
 
-func (s *LoansService) ReturnBook(loanId string, bookId string, memberId string) error {
-	return s.loansRepo.ReturnBook(loanId, bookId, memberId)
+func (s *LoansService) ReturnBook(loanId string, memberId string, bookId string) error {
+	err := s.bookRepo.IncrementAvailable(bookId)
+	if err != nil {
+		fmt.Println(err)
+		return errors.New("failed to create loan")
+	}
+	return s.loansRepo.ReturnBook(loanId, memberId, bookId)
 }
 
 func (s *LoansService) GetMemberLoans(memberId string) ([]*types.LoanResponse, int64, error) {
