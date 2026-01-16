@@ -53,12 +53,21 @@ func (s *LoansService) CreateLoan(memberId string, bookId string, payload types.
 		return errors.New("loan days must be between 1 and 14")
 	}
 
+	fmt.Println(payload.DurationInDays, "duration")
+
+	existingLoan, _ := s.loansRepo.GetLoanByMemberAndBook(memberId, bookId)
+
+	if existingLoan != nil && existingLoan.Status == string(constants.LoanActive) {
+		return errors.New("member already has an active loan for this book")
+	}
+
 	loan := &model.LoanEntity{
 		MemberID: memberId,
 		BookID:   bookId,
 		LoanDate: LoanDate,
 		DueDate:  DueDate,
 		Status:   string(constants.LoanActive),
+		Duration: payload.DurationInDays,
 	}
 
 	er := s.loansRepo.CreateLoan(*loan)

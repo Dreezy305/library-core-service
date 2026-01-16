@@ -27,6 +27,15 @@ func (r *GormLoanRepository) CreateLoan(payload model.LoanEntity) error {
 	return nil
 }
 
+func (r *GormLoanRepository) GetLoanByMemberAndBook(memberId string, bookId string) (*model.LoanEntity, error) {
+	var loan model.LoanEntity
+	err := r.DB.Where("member_id = ? AND book_id = ?", memberId, bookId).Find(&loan).Error
+	if err != nil {
+		return nil, err
+	}
+	return &loan, nil
+}
+
 func (r *GormLoanRepository) GetLoans() ([]*types.LoanResponse, error) {
 	return nil, nil
 }

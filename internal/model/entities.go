@@ -67,7 +67,7 @@ type LoanEntity struct {
 	LoanDate   time.Time `gorm:"not null"`
 	DueDate    time.Time `gorm:"not null"`
 	ReturnedAt *time.Time
-	DurationInDays   int `gorm:"not null"` // in days
+	Duration   int `gorm:"not null"` // in days
 
 	Status string `gorm:"type:varchar(20);not null"` // e.g. active, returned, overdue
 

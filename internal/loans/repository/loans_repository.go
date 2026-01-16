@@ -17,6 +17,10 @@ func (r *LoansRepository) CreateLoan(payload model.LoanEntity) error {
 	return r.gormRepo.CreateLoan(payload)
 }
 
+func (r *LoansRepository) GetLoanByMemberAndBook(memberId string, bookId string) (*model.LoanEntity, error) {
+	return r.gormRepo.GetLoanByMemberAndBook(memberId, bookId)
+}
+
 func (r *LoansRepository) GetLoans() ([]*types.LoanResponse, error) {
 	return r.gormRepo.GetLoans()
 }
