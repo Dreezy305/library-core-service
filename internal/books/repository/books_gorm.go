@@ -165,3 +165,13 @@ func (r *GormBookRepository) IncrementAvailable(bookId string) error {
 	}
 	return nil
 }
+
+func (r *GormBookRepository) ReturnBook(loanId string, memberId string, bookId string) error {
+
+	err := r.DB.Model(&model.LoanEntity{}).Where("id = ? AND member_id = ? AND book_id = ?", loanId, memberId, bookId).Update("status", "returned").Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
