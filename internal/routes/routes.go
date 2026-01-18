@@ -24,35 +24,8 @@ import (
 	"gorm.io/gorm"
 )
 
-var authHandler *AuthHandler.AuthHandler
-var authService *AuthService.AuthService
-var authRepository *AuthRepository.AuthRepository
 var gormRepo *AuthRepository.GormAuthRepository
-
-var userHandler *UserHandler.UserHandler
-var userService *UserService.UserService
-var serviceRepository *UserRepository.UserRepository
 var userGormRepo *UserRepository.GormUserRepository
-
-var authorHandler *AuthorHandler.AuthorHandler
-var authorService *AuthorService.AuthorService
-var authorRespository *AuthorRepository.AuthorRepository
-var authorGormRepo *AuthorRepository.GormAuthorRepository
-
-var bookHandler *BookHandler.BookHandler
-var bookService *BookService.BookService
-var bookRepository *BookRepository.BookRepository
-var bookGormRepo *BookRepository.GormBookRepository
-
-var categoryHandler *CategoryHandler.CategoryHandler
-var categoryService *CategoryService.CategoryService
-var categoryRepository *CategoryRepository.CategoryRepository
-var categoryGormRepo *CategoryRepository.GormCategoryRepository
-
-var loanHandler *LoansHandler.LoansHandler
-var loanService *LoansService.LoansService
-var loanRepository *LoansRepository.LoansRepository
-var loanGormRepo *LoansRepository.GormLoanRepository
 
 // health check route
 func HealthCheckRoute(app fiber.Router) {
