@@ -12,8 +12,8 @@ func NewUserRepository(gormRepo *GormUserRepository) *UserRepository {
 	return &UserRepository{gormRepo: gormRepo}
 }
 
-func (s *UserRepository) GetUsers(page int, limit int) ([]*types.UserResponse, int64, error) {
-	return s.gormRepo.GetUsers(page, limit)
+func (s *UserRepository) GetUsers(page int, limit int, search *string, startDate *string, endDate *string) ([]*types.UserResponse, int64, error) {
+	return s.gormRepo.GetUsers(page, limit, search, startDate, endDate)
 }
 func (s *UserRepository) GetUser(userId string) (*types.UserResponse, error) {
 	return s.gormRepo.GetUser(userId)

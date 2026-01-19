@@ -32,7 +32,12 @@ func (h *UserHandler) GetUsers(c fiber.Ctx) error {
 	if errr != nil {
 		return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Invalid value for paramater limit"})
 	}
-	users, total, _ := h.Service.GetUsers(page, limit)
+
+	search := queries["search"]
+	startDate := queries["startDate"]
+	endDate := queries["endDate"]
+
+	users, total, _ := h.Service.GetUsers(page, limit, &search, &startDate, &endDate)
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Users fetched successfully", "data": fiber.Map{"users": users, "meta": fiber.Map{"total": total, "page": page, "limit": limit}}})
 }

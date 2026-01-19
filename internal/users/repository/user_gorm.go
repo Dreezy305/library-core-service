@@ -16,7 +16,7 @@ func NewGormUserRepository(db *gorm.DB) *GormUserRepository {
 	return &GormUserRepository{DB: db}
 }
 
-func (r *GormUserRepository) GetUsers(page int, limit int) ([]*types.UserResponse, int64, error) {
+func (r *GormUserRepository) GetUsers(page int, limit int, search *string, startDate *string, endDate *string) ([]*types.UserResponse, int64, error) {
 	var total int64
 	var users []*model.UserEntity
 
@@ -26,6 +26,8 @@ func (r *GormUserRepository) GetUsers(page int, limit int) ([]*types.UserRespons
 	}
 
 	offset := (page - 1) * limit
+
+	
 
 	err := r.DB.Model(&model.UserEntity{}).Find(&users).Offset(offset).Limit(limit).Error
 

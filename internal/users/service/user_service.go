@@ -13,8 +13,8 @@ func NewUserService(repo repository.UserRepository) *UserService {
 	return &UserService{repo: repo}
 }
 
-func (s *UserService) GetUsers(page int, limit int) ([]*types.UserResponse, int64, error) {
-	return s.repo.GetUsers(page, limit)
+func (s *UserService) GetUsers(page int, limit int, search *string, startDate *string, endDate *string) ([]*types.UserResponse, int64, error) {
+	return s.repo.GetUsers(page, limit, search, startDate, endDate)
 }
 
 func (s *UserService) GetUser(userId string) (*types.UserResponse, error) {

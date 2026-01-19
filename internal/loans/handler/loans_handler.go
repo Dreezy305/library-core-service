@@ -33,7 +33,7 @@ func (h *LoansHandler) CreateLoan(c fiber.Ctx) error {
 	fmt.Println(payload)
 
 	errs := validators.ValidateStruct(payload)
-	
+
 	if errs != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(validators.FormatValidationError(errs))
 	}
