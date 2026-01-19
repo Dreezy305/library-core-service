@@ -2,6 +2,7 @@ package repository
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/dreezy305/library-core-service/internal/model"
 	"github.com/dreezy305/library-core-service/internal/types"
@@ -16,7 +17,7 @@ func NewGormUserRepository(db *gorm.DB) *GormUserRepository {
 	return &GormUserRepository{DB: db}
 }
 
-func (r *GormUserRepository) GetUsers(page int, limit int, search *string, startDate *string, endDate *string) ([]*types.UserResponse, int64, error) {
+func (r *GormUserRepository) GetUsers(page int, limit int, search *string, startDate *time.Time, endDate *time.Time) ([]*types.UserResponse, int64, error) {
 	var total int64
 	var users []*model.UserEntity
 
@@ -27,15 +28,29 @@ func (r *GormUserRepository) GetUsers(page int, limit int, search *string, start
 
 	offset := (page - 1) * limit
 
-	
+	query := r.DB.Model(&model.UserEntity{})
 
-	err := r.DB.Model(&model.UserEntity{}).Find(&users).Offset(offset).Limit(limit).Error
+	if search != nil && *search != "" {
+		likeSearch := fmt.Sprintf("%%%s%%", *search)
+		query = query.Where("first_name ILIKE ? OR last_name ILIKE ? OR email ILIKE ?", likeSearch, likeSearch, likeSearch)
+	}
+
+	if startDate != nil {
+		query = query.Where("created_at >= ?", *startDate)
+	}
+
+	if endDate != nil {
+		query = query.Where("created_at <= ?", *endDate)
+
+	}
+
+	err := query.Find(&users).Offset(offset).Limit(limit).Error
 
 	if err != nil {
 		return nil, 0, err
 	}
 
-	errr := r.DB.Model(&model.UserEntity{}).Count(&total).Error
+	errr := query.Count(&total).Error
 
 	if errr != nil {
 		return nil, 0, errr

@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"time"
+
 	"github.com/dreezy305/library-core-service/internal/types"
 )
 
@@ -12,7 +14,7 @@ func NewUserRepository(gormRepo *GormUserRepository) *UserRepository {
 	return &UserRepository{gormRepo: gormRepo}
 }
 
-func (s *UserRepository) GetUsers(page int, limit int, search *string, startDate *string, endDate *string) ([]*types.UserResponse, int64, error) {
+func (s *UserRepository) GetUsers(page int, limit int, search *string, startDate *time.Time, endDate *time.Time) ([]*types.UserResponse, int64, error) {
 	return s.gormRepo.GetUsers(page, limit, search, startDate, endDate)
 }
 func (s *UserRepository) GetUser(userId string) (*types.UserResponse, error) {
