@@ -23,8 +23,8 @@ func (r *LoansRepository) GetLoanByMemberAndBook(memberId string, bookId string)
 	return r.gormRepo.GetLoanByMemberAndBook(memberId, bookId)
 }
 
-func (r *LoansRepository) GetLoans(page int, limit int, search *string, startDate *time.Time, endDate *time.Time, status *string) ([]*types.LoanResponse, int, error) {
-	return r.gormRepo.GetLoans(page, limit, search, startDate, endDate, status)
+func (r *LoansRepository) GetLoans(page int, limit int, search *string, startDate *time.Time, endDate *time.Time, status *string, loanDate *time.Time, dueDate *time.Time) ([]*types.LoanResponse, int, error) {
+	return r.gormRepo.GetLoans(page, limit, search, startDate, endDate, status, loanDate, dueDate)
 }
 
 func (r *LoansRepository) ReturnBook(loanId string, memberId string, bookId string) error {

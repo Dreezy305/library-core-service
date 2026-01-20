@@ -66,8 +66,10 @@ func (h *LoansHandler) GetLoans(c fiber.Ctx) error {
 	startDate := queries["startDate"]
 	endDate := queries["endDate"]
 	status := queries["status"]
+	loanDate := queries["loanDate"]
+	dueDate := queries["dueDate"]
 
-	loans, total, errrr := h.Service.GetLoans(page, limit, &search, &startDate, &endDate, &status)
+	loans, total, errrr := h.Service.GetLoans(page, limit, &search, &startDate, &endDate, &status, &loanDate, &dueDate)
 
 	if errrr != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Failed to fetch loans"})

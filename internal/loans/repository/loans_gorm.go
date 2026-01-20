@@ -37,7 +37,7 @@ func (r *GormLoanRepository) GetLoanByMemberAndBook(memberId string, bookId stri
 	return &loan, nil
 }
 
-func (r *GormLoanRepository) GetLoans(page int, limit int, search *string, startDate *time.Time, endDate *time.Time, status *string) ([]*types.LoanResponse, int, error) {
+func (r *GormLoanRepository) GetLoans(page int, limit int, search *string, startDate *time.Time, endDate *time.Time, status *string, loanDate *time.Time, dueDate *time.Time) ([]*types.LoanResponse, int, error) {
 	var loans []*model.LoanEntity
 	var response []*types.LoanResponse
 	if page <= 0 || limit <= 0 {
@@ -68,6 +68,14 @@ func (r *GormLoanRepository) GetLoans(page int, limit int, search *string, start
 
 	if status != nil && *status != "" {
 		query = query.Where("status = ?", *status)
+	}
+
+	if loanDate != nil {
+		query = query.Where("loan_date = ?", *loanDate)
+	}
+
+	if dueDate != nil {
+		query = query.Where("due_date = ?", *dueDate)
 	}
 
 	err := query.Find(&loans).Limit(limit).Offset(offset).Error

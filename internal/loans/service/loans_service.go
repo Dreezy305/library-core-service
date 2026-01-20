@@ -87,9 +87,11 @@ func (s *LoansService) CreateLoan(memberId string, bookId string, payload types.
 	return nil
 }
 
-func (s *LoansService) GetLoans(page int, limit int, search *string, startDate *string, endDate *string, status *string) ([]*types.LoanResponse, int, error) {
+func (s *LoansService) GetLoans(page int, limit int, search *string, startDate *string, endDate *string, status *string, loanDate *string, dueDate *string) ([]*types.LoanResponse, int, error) {
 	var startDatePtr *time.Time
 	var endDatePtr *time.Time
+	var loanDatePtr *time.Time
+	var dueDatePtr *time.Time
 
 	if startDate != nil && *startDate != "" {
 		startDateParsed, err := utils.ParseDate(*startDate)
@@ -106,8 +108,22 @@ func (s *LoansService) GetLoans(page int, limit int, search *string, startDate *
 		}
 		endDatePtr = &endDateParsed
 	}
+	if loanDate != nil && *loanDate != "" {
+		loanDateParsed, err := utils.ParseDate(*loanDate)
+		if err != nil {
+			return nil, 0, err
+		}
+		loanDatePtr = &loanDateParsed
+	}
+	if dueDate != nil && *dueDate != "" {
+		dueDateParsed, err := utils.ParseDate(*dueDate)
+		if err != nil {
+			return nil, 0, err
+		}
+		dueDatePtr = &dueDateParsed
+	}
 
-	return s.loansRepo.GetLoans(page, limit, search, startDatePtr, endDatePtr, status)
+	return s.loansRepo.GetLoans(page, limit, search, startDatePtr, endDatePtr, status, loanDatePtr, dueDatePtr)
 }
 
 func (s *LoansService) ReturnBook(loanId string, memberId string, bookId string) error {
