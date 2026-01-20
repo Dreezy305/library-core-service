@@ -34,7 +34,9 @@ func (h *BookHandler) GetBooks(c fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Invalid value for paramater limit"})
 	}
 
-	books, count, err := h.service.GetBooks(page, limit)
+	search := queries["search"]
+
+	books, count, err := h.service.GetBooks(page, limit, &search)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Failed to retrieve books"})
 	}

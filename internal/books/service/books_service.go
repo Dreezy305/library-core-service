@@ -22,8 +22,8 @@ func (s *BookService) CreateBook(b *model.BookEntity) error {
 	return s.repo.CreateBook(b)
 }
 
-func (s *BookService) GetBooks(page int, limit int) ([]*types.BookResponse, int64, error) {
-	return s.repo.GetBooks(page, limit)
+func (s *BookService) GetBooks(page int, limit int, search *string) ([]*types.BookResponse, int64, error) {
+	return s.repo.GetBooks(page, limit, search)
 }
 
 func (s *BookService) GetBook(bookId string) (*types.BookResponse, error) {

@@ -21,8 +21,8 @@ func (s *BookRepository) CreateBook(b *model.BookEntity) error {
 	return s.gormRepo.CreateBook(b)
 }
 
-func (s *BookRepository) GetBooks(page int, limit int) ([]*types.BookResponse, int64, error) {
-	return s.gormRepo.GetBooks(page, limit)
+func (s *BookRepository) GetBooks(page int, limit int, search *string) ([]*types.BookResponse, int64, error) {
+	return s.gormRepo.GetBooks(page, limit, search)
 }
 
 func (s *BookRepository) GetBook(bookId string) (*types.BookResponse, error) {

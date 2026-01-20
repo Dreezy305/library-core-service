@@ -38,7 +38,7 @@ func (r *GormBookRepository) CreateBook(b *model.BookEntity) error {
 	return nil
 }
 
-func (r *GormBookRepository) GetBooks(page int, limit int) ([]*types.BookResponse, int64, error) {
+func (r *GormBookRepository) GetBooks(page int, limit int, search *string) ([]*types.BookResponse, int64, error) {
 	var total int64
 	var books []*model.BookEntity
 
@@ -49,13 +49,20 @@ func (r *GormBookRepository) GetBooks(page int, limit int) ([]*types.BookRespons
 
 	offset := (page - 1) * limit
 
-	err := r.DB.Preload("Author").Model(&model.BookEntity{}).Find(&books).Offset(offset).Limit(limit).Error
+	query := r.DB.Preload("Author").Model(&model.BookEntity{})
+
+	if search != nil {
+		likeSearch := fmt.Sprintf("%%%s%%", *search)
+		query = query.Where("title ILIKE ? OR description ILIKE ? OR isbn ILIKE ?", likeSearch, likeSearch, likeSearch)
+	}
+
+	err := query.Find(&books).Offset(offset).Limit(limit).Error
 
 	if err != nil {
 		return nil, 0, err
 	}
 
-	errr := r.DB.Model(&model.BookEntity{}).Count(&total).Error
+	errr := query.Count(&total).Error
 
 	if errr != nil {
 		return nil, 0, errr
