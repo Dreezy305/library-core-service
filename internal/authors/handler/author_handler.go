@@ -84,7 +84,11 @@ func (h *AuthorHandler) GetAuthors(c fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Invalid value for paramater limit"})
 	}
 
-	authors, total, errrr := h.Service.GetAuthors(page, limit)
+	search := queries["search"]
+	startDate := queries["startDate"]
+	endDate := queries["endDate"]
+
+	authors, total, errrr := h.Service.GetAuthors(page, limit, &search, &startDate, &endDate)
 
 	if errrr != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Failed to fetch authors"})

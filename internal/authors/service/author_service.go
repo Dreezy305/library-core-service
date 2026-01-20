@@ -1,9 +1,12 @@
 package service
 
 import (
+	"time"
+
 	"github.com/dreezy305/library-core-service/internal/authors/repository"
 	"github.com/dreezy305/library-core-service/internal/model"
 	"github.com/dreezy305/library-core-service/internal/types"
+	"github.com/dreezy305/library-core-service/internal/utils"
 )
 
 type AuthorService struct {
@@ -22,8 +25,28 @@ func (s *AuthorService) CreateAuthor(a *model.AuthorEntity) error {
 	return s.repo.CreateAuthor(a)
 }
 
-func (s *AuthorService) GetAuthors(page int, limit int) ([]*types.AuthorResponse, int64, error) {
-	return s.repo.GetAuthors(page, limit)
+func (s *AuthorService) GetAuthors(page int, limit int, search *string, startDate *string, endDate *string) ([]*types.AuthorResponse, int64, error) {
+
+	var startDatePtr *time.Time
+	var endDatePtr *time.Time
+
+	if startDate != nil && *startDate != "" {
+		startDateParsed, err := utils.ParseDate(*startDate)
+		if err != nil {
+			return nil, 0, err
+		}
+		startDatePtr = &startDateParsed
+	}
+
+	if endDate != nil && *endDate != "" {
+		endDateParsed, err := utils.ParseDate(*endDate)
+		if err != nil {
+			return nil, 0, err
+		}
+		endDatePtr = &endDateParsed
+	}
+
+	return s.repo.GetAuthors(page, limit, search, startDatePtr, endDatePtr)
 }
 
 func (s *AuthorService) GetAuthor(authorId string) (*types.AuthorResponse, error) {

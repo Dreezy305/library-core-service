@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"time"
+
 	"github.com/dreezy305/library-core-service/internal/model"
 	"github.com/dreezy305/library-core-service/internal/types"
 )
@@ -21,8 +23,8 @@ func (r *AuthorRepository) CreateAuthor(a *model.AuthorEntity) error {
 	return r.gormRepo.CreateAuthor(a)
 }
 
-func (r *AuthorRepository) GetAuthors(page int, limit int) ([]*types.AuthorResponse, int64, error) {
-	return r.gormRepo.GetAuthors(page, limit)
+func (r *AuthorRepository) GetAuthors(page int, limit int, search *string, startDate *time.Time, endDate *time.Time) ([]*types.AuthorResponse, int64, error) {
+	return r.gormRepo.GetAuthors(page, limit, search, startDate, endDate)
 }
 
 func (r *AuthorRepository) GetAuthor(authorId string) (*types.AuthorResponse, error) {

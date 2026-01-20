@@ -2,6 +2,7 @@ package repository
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/dreezy305/library-core-service/internal/model"
 	"github.com/dreezy305/library-core-service/internal/types"
@@ -37,7 +38,7 @@ func (r *GormAuthorRepository) CreateAuthor(a *model.AuthorEntity) error {
 	return nil
 }
 
-func (r *GormAuthorRepository) GetAuthors(page int, limit int) ([]*types.AuthorResponse, int64, error) {
+func (r *GormAuthorRepository) GetAuthors(page int, limit int, search *string, startDate *time.Time, endDate *time.Time) ([]*types.AuthorResponse, int64, error) {
 	var total int64
 	var authors []*model.AuthorEntity
 
@@ -46,15 +47,30 @@ func (r *GormAuthorRepository) GetAuthors(page int, limit int) ([]*types.AuthorR
 		limit = 1
 	}
 
+	query := r.DB.Model(&model.AuthorEntity{})
+
+	if search != nil {
+		likeSearch := fmt.Sprintf("%%%s%%", *search)
+		query = query.Where("first_name ILIKE ? OR last_name ILIKE ? OR email ILIKE ? OR pen_name ILIKE ?", likeSearch, likeSearch, likeSearch, likeSearch)
+	}
+
 	offset := (page - 1) * limit
 
-	err := r.DB.Model(&model.AuthorEntity{}).Find(&authors).Offset(offset).Limit(limit).Error
-
+	err := query.Find(&authors).Offset(offset).Limit(limit).Error
 	if err != nil {
 		return nil, 0, err
 	}
 
-	errr := r.DB.Model(&model.AuthorEntity{}).Count(&total).Error
+	if startDate != nil {
+		query = query.Where("created_at >= ?", *startDate)
+	}
+
+	if endDate != nil {
+		query = query.Where("created_at <= ?", *endDate)
+
+	}
+
+	errr := query.Count(&total).Error
 
 	if errr != nil {
 		return nil, 0, errr
