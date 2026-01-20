@@ -37,6 +37,8 @@ func (h *UserHandler) GetUsers(c fiber.Ctx) error {
 	startDate := queries["startDate"]
 	endDate := queries["endDate"]
 
+	fmt.Println(startDate, endDate, "dates")
+
 	users, total, _ := h.Service.GetUsers(page, limit, &search, &startDate, &endDate)
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Users fetched successfully", "data": fiber.Map{"users": users, "meta": fiber.Map{"total": total, "page": page, "limit": limit}}})

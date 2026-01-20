@@ -35,6 +35,9 @@ func (r *GormUserRepository) GetUsers(page int, limit int, search *string, start
 		query = query.Where("first_name ILIKE ? OR last_name ILIKE ? OR email ILIKE ?", likeSearch, likeSearch, likeSearch)
 	}
 
+	fmt.Println(startDate, "start date")
+	fmt.Println(endDate, "end date")
+
 	if startDate != nil {
 		query = query.Where("created_at >= ?", *startDate)
 	}

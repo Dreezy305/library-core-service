@@ -1,6 +1,8 @@
 package service
 
 import (
+	"time"
+
 	"github.com/dreezy305/library-core-service/internal/types"
 	"github.com/dreezy305/library-core-service/internal/users/repository"
 	"github.com/dreezy305/library-core-service/internal/utils"
@@ -15,19 +17,25 @@ func NewUserService(repo repository.UserRepository) *UserService {
 }
 
 func (s *UserService) GetUsers(page int, limit int, search *string, startDate *string, endDate *string) ([]*types.UserResponse, int64, error) {
-	startDatePtr, err := utils.ParseDate(*startDate)
+	var startDatePtr *time.Time
+	var endDatePtr *time.Time
 
-	if err != nil {
-		return nil, 0, err
+	if startDate != nil && *startDate != "" {
+		startDateParsed, err := utils.ParseDate(*startDate)
+		if err != nil {
+			return nil, 0, err
+		}
+		startDatePtr = &startDateParsed
 	}
 
-	endDatePtr, err := utils.ParseDate(*endDate)
-
-	if err != nil {
-		return nil, 0, err
+	if endDate != nil && *endDate != "" {
+		endDateParsed, err := utils.ParseDate(*endDate)
+		if err != nil {
+			return nil, 0, err
+		}
+		endDatePtr = &endDateParsed
 	}
-
-	return s.repo.GetUsers(page, limit, search, &startDatePtr, &endDatePtr)
+	return s.repo.GetUsers(page, limit, search, startDatePtr, endDatePtr)
 }
 
 func (s *UserService) GetUser(userId string) (*types.UserResponse, error) {
