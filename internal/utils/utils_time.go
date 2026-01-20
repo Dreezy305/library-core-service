@@ -1,9 +1,11 @@
 package utils
 
-func ParseDate(dateStr string) (*string, error) {
-	return &dateStr, nil
+import "time"
+
+func ParseDate(dateStr string) (time.Time, error) {
+	return time.Parse("2006-01-02", dateStr)
 }
 
-func FormatDate(dateStr string) string {
-	return dateStr
+func FormatDate(date time.Time) string {
+	return date.Format("2006-01-02")
 }
