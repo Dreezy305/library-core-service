@@ -11,6 +11,7 @@ import (
 	"github.com/dreezy305/library-core-service/internal/model"
 	"github.com/dreezy305/library-core-service/internal/types"
 	UserRepository "github.com/dreezy305/library-core-service/internal/users/repository"
+	"github.com/dreezy305/library-core-service/internal/utils"
 )
 
 const (
@@ -86,8 +87,27 @@ func (s *LoansService) CreateLoan(memberId string, bookId string, payload types.
 	return nil
 }
 
-func (s *LoansService) GetLoans(page int, limit int) ([]*types.LoanResponse, int, error) {
-	return s.loansRepo.GetLoans(page, limit)
+func (s *LoansService) GetLoans(page int, limit int, search *string, startDate *string, endDate *string) ([]*types.LoanResponse, int, error) {
+	var startDatePtr *time.Time
+	var endDatePtr *time.Time
+
+	if startDate != nil && *startDate != "" {
+		startDateParsed, err := utils.ParseDate(*startDate)
+		if err != nil {
+			return nil, 0, err
+		}
+		startDatePtr = &startDateParsed
+	}
+
+	if endDate != nil && *endDate != "" {
+		endDateParsed, err := utils.ParseDate(*endDate)
+		if err != nil {
+			return nil, 0, err
+		}
+		endDatePtr = &endDateParsed
+	}
+
+	return s.loansRepo.GetLoans(page, limit, search, startDatePtr, endDatePtr)
 }
 
 func (s *LoansService) ReturnBook(loanId string, memberId string, bookId string) error {

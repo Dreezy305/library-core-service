@@ -62,7 +62,11 @@ func (h *LoansHandler) GetLoans(c fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Invalid value for paramater limit"})
 	}
 
-	loans, total, errrr := h.Service.GetLoans(page, limit)
+	search := queries["search"]
+	startDate := queries["startDate"]
+	endDate := queries["endDate"]
+
+	loans, total, errrr := h.Service.GetLoans(page, limit, &search, &startDate, &endDate)
 
 	if errrr != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Failed to fetch loans"})
