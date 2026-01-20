@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"time"
+
 	"github.com/dreezy305/library-core-service/internal/model"
 	"github.com/dreezy305/library-core-service/internal/types"
 )
@@ -21,8 +23,8 @@ func (r *LoansRepository) GetLoanByMemberAndBook(memberId string, bookId string)
 	return r.gormRepo.GetLoanByMemberAndBook(memberId, bookId)
 }
 
-func (r *LoansRepository) GetLoans(page int, limit int) ([]*types.LoanResponse, int, error) {
-	return r.gormRepo.GetLoans(page, limit)
+func (r *LoansRepository) GetLoans(page int, limit int, search *string, startDate *time.Time, endDate *time.Time) ([]*types.LoanResponse, int, error) {
+	return r.gormRepo.GetLoans(page, limit, search, startDate, endDate)
 }
 
 func (r *LoansRepository) ReturnBook(loanId string, memberId string, bookId string) error {

@@ -3,6 +3,7 @@ package repository
 import (
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/dreezy305/library-core-service/internal/model"
 	"github.com/dreezy305/library-core-service/internal/types"
@@ -36,7 +37,7 @@ func (r *GormLoanRepository) GetLoanByMemberAndBook(memberId string, bookId stri
 	return &loan, nil
 }
 
-func (r *GormLoanRepository) GetLoans(page int, limit int) ([]*types.LoanResponse, int, error) {
+func (r *GormLoanRepository) GetLoans(page int, limit int, search *string, startDate *time.Time, endDate *time.Time) ([]*types.LoanResponse, int, error) {
 	var loans []*model.LoanEntity
 	var response []*types.LoanResponse
 	if page <= 0 || limit <= 0 {
@@ -44,14 +45,33 @@ func (r *GormLoanRepository) GetLoans(page int, limit int) ([]*types.LoanRespons
 		limit = 1
 	}
 
+	query := r.DB.Model(&model.LoanEntity{})
+
 	offset := (page - 1) * limit
 
-	err := r.DB.Model(&model.LoanEntity{}).Find(&loans).Limit(limit).Offset(offset).Error
+	if search != nil && *search != "" {
+		likeSearch := fmt.Sprintf("%%%s%%", *search)
+		query = query.Where("first_name ILIKE ? OR last_name ILIKE ? OR email ILIKE ?", likeSearch, likeSearch, likeSearch)
+	}
+
+	fmt.Println(startDate, "start date")
+	fmt.Println(endDate, "end date")
+
+	if startDate != nil {
+		query = query.Where("created_at >= ?", *startDate)
+	}
+
+	if endDate != nil {
+		query = query.Where("created_at <= ?", *endDate)
+
+	}
+
+	err := query.Find(&loans).Limit(limit).Offset(offset).Error
 	if err != nil {
 		return nil, 0, err
 	}
 	var total int64
-	errr := r.DB.Model(&model.LoanEntity{}).Count(&total).Error
+	errr := query.Count(&total).Error
 
 	if errr != nil {
 		return nil, 0, errr
