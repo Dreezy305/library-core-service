@@ -206,6 +206,8 @@ type LoanResponse struct {
 	ReturnedAt *time.Time    `json:"returnedAt,omitempty"`
 	Member     *UserResponse `json:"member,omitempty"`
 	Book       *BookResponse `json:"book,omitempty"`
+	CreatedAt  time.Time     `json:"createdAt"`
+	UpdatedAt  time.Time     `json:"updatedAt"`
 }
 
 type LoanPayload struct {

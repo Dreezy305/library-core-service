@@ -86,6 +86,8 @@ func (r *GormLoanRepository) GetLoans(page int, limit int, search *string, start
 			DueDate:    v.DueDate,
 			ReturnedAt: v.ReturnedAt,
 			Status:     v.Status,
+			CreatedAt:  v.CreatedAt,
+			UpdatedAt:  v.UpdatedAt,
 		})
 	}
 
