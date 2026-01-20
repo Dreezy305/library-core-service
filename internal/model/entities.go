@@ -8,15 +8,15 @@ import (
 )
 
 type UserEntity struct {
-	ID           string         `gorm:"primaryKey;type:uuid;default:gen_random_uuid()"` // Primary key field
+	ID           string         `gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
 	FirstName    string         `gorm:"not null"`
 	LastName     string         `gorm:"not null"`
-	Email        *string        `gorm:"not null;uniqueIndex"` // Unique email field
+	Email        *string        `gorm:"not null;uniqueIndex"`
 	MemberNumber sql.NullString `gorm:"uniqueIndex;->"`
 	PasswordHash string         `gorm:"not null"`
 	Role         string         `gorm:"not null"`
-	CreatedAt    time.Time      // Automatically managed by GORM for creation time
-	UpdatedAt    time.Time      // Automatically managed by GORM for update time
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 }
 
 type BookEntity struct {
