@@ -18,7 +18,6 @@ func randString(n int) string {
 
 func GenerateMemberNumber() string {
 	year := time.Now().Year()
-	suffix := randString(5) // A–Z0–9
+	suffix := randString(5)
 	return fmt.Sprintf("MBR-%d-%s", year, suffix)
-
 }

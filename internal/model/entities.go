@@ -1,20 +1,19 @@
 package model
 
 import (
-	"database/sql"
 	"time"
 
 	"gorm.io/gorm"
 )
 
 type UserEntity struct {
-	ID           string         `gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
-	FirstName    string         `gorm:"not null"`
-	LastName     string         `gorm:"not null"`
-	Email        *string        `gorm:"not null;uniqueIndex"`
-	MemberNumber sql.NullString `gorm:"uniqueIndex"`
-	PasswordHash string         `gorm:"not null"`
-	Role         string         `gorm:"not null"`
+	ID           string  `gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
+	FirstName    string  `gorm:"not null"`
+	LastName     string  `gorm:"not null"`
+	Email        *string `gorm:"not null;uniqueIndex"`
+	MemberNumber string  `gorm:"uniqueIndex"`
+	PasswordHash string  `gorm:"not null"`
+	Role         string  `gorm:"not null"`
 	CreatedAt    time.Time
 	UpdatedAt    time.Time
 }

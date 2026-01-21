@@ -13,6 +13,7 @@ import (
 	"github.com/dreezy305/library-core-service/internal/mailer"
 	"github.com/dreezy305/library-core-service/internal/model"
 	"github.com/dreezy305/library-core-service/internal/types"
+	"github.com/dreezy305/library-core-service/internal/utils"
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -47,13 +48,15 @@ func (s *AuthService) RegisterUserService(u *types.UserType) error {
 	}
 
 	// generate member number
+	memberNumber := utils.GenerateMemberNumber()
 
 	user := &model.UserEntity{
 		FirstName:    u.FirstName,
 		LastName:     u.LastName,
 		Email:        &u.Email,
 		PasswordHash: string(hashedPassword),
-		Role:         "member", // default role
+		Role:         "member",
+		MemberNumber: memberNumber,
 	}
 	// fmt.Println(hashedPassword)
 	fmt.Println("User entity:", user)
