@@ -12,7 +12,7 @@ type UserEntity struct {
 	FirstName    string         `gorm:"not null"`
 	LastName     string         `gorm:"not null"`
 	Email        *string        `gorm:"not null;uniqueIndex"`
-	MemberNumber sql.NullString `gorm:"uniqueIndex;->"`
+	MemberNumber sql.NullString `gorm:"uniqueIndex"`
 	PasswordHash string         `gorm:"not null"`
 	Role         string         `gorm:"not null"`
 	CreatedAt    time.Time

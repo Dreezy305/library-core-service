@@ -46,6 +46,8 @@ func (s *AuthService) RegisterUserService(u *types.UserType) error {
 		return err
 	}
 
+	// generate member number
+
 	user := &model.UserEntity{
 		FirstName:    u.FirstName,
 		LastName:     u.LastName,
