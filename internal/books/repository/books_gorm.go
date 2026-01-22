@@ -49,14 +49,14 @@ func (r *GormBookRepository) GetBooks(page int, limit int, search *string) ([]*t
 
 	offset := (page - 1) * limit
 
-	query := r.DB.Preload("Author").Model(&model.BookEntity{})
+	query := r.DB.Preload("Author").Preload("Categories").Model(&model.BookEntity{})
 
 	if search != nil {
 		likeSearch := fmt.Sprintf("%%%s%%", *search)
 		query = query.Where("title ILIKE ? OR description ILIKE ? OR isbn ILIKE ?", likeSearch, likeSearch, likeSearch)
 	}
 
-	err := query.Find(&books).Offset(offset).Limit(limit).Error
+	err := query.Offset(offset).Limit(limit).Order("created_at DESC").Find(&books).Error
 
 	if err != nil {
 		return nil, 0, err

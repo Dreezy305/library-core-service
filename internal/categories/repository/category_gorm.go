@@ -44,7 +44,7 @@ func (r *GormCategoryRepository) GetCategories() ([]*types.CategoryResponse, err
 
 	var response []*types.CategoryResponse
 
-	err := r.DB.Model(&model.CategoryEntity{}).Find(&categories).Error
+	err := r.DB.Model(&model.CategoryEntity{}).Order("created_at DESC").Find(&categories).Error
 
 	for _, category := range categories {
 		response = append(response, &types.CategoryResponse{

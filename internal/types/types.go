@@ -165,7 +165,8 @@ type BookResponse struct {
 	CreatedAt       time.Time `json:"createdAt"`
 	UpdatedAt       time.Time `json:"updatedAt"`
 
-	Author *AuthorResponse `json:"author,omitempty"`
+	Author   *AuthorResponse     `json:"author,omitempty"`
+	Category *[]CategoryResponse `json:"categories,omitempty"`
 }
 
 type UpdateBookPayload struct {
