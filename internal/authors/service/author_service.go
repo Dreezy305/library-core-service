@@ -42,12 +42,26 @@ func (s *AuthorService) CreateAuthor(payload types.AuthorPayload) error {
 		Nationality: payload.Nationality,
 		DateOfBirth: dob,
 		Email:       &payload.Email,
-		Bio:         *payload.Bio,
-		PenName:     *payload.PenName,
-		Website:     *payload.Website,
-		Twitter:     *payload.Twitter,
-		Facebook:    *payload.Facebook,
-		Linkedln:    *payload.Linkedln,
+	}
+
+	if payload.Bio != nil {
+		u.Bio = *payload.Bio
+	}
+
+	if payload.PenName != nil {
+		u.PenName = *payload.PenName
+	}
+	if payload.Website != nil {
+		u.Website = *payload.Website
+	}
+	if payload.Twitter != nil {
+		u.Twitter = *payload.Twitter
+	}
+	if payload.Facebook != nil {
+		u.Facebook = *payload.Facebook
+	}
+	if payload.Linkedln != nil {
+		u.Linkedln = *payload.Linkedln
 	}
 
 	errr := s.repo.CreateAuthor(u)
