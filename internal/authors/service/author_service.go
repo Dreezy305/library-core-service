@@ -3,6 +3,7 @@ package service
 import (
 	"errors"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/dreezy305/library-core-service/internal/authors/repository"
@@ -59,7 +60,19 @@ func (s *AuthorService) CreateAuthor(payload types.AuthorPayload) error {
 	return nil
 }
 
-func (s *AuthorService) GetAuthors(page int, limit int, search *string, startDate *string, endDate *string) ([]*types.AuthorResponse, int64, error) {
+func (s *AuthorService) GetAuthors(p string, l string, search *string, startDate *string, endDate *string) ([]*types.AuthorResponse, int64, error) {
+
+	page, err := strconv.Atoi(p)
+
+	if err != nil {
+		return nil, 0, errors.New("Invalid value for paramater page")
+	}
+
+	limit, errr := strconv.Atoi(l)
+
+	if errr != nil {
+		return nil, 0, errors.New("Invalid value for paramater limit")
+	}
 
 	var startDatePtr *time.Time
 	var endDatePtr *time.Time

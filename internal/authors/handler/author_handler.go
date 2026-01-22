@@ -2,7 +2,6 @@ package handler
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/dreezy305/library-core-service/internal/authors/service"
 	"github.com/dreezy305/library-core-service/internal/types"
@@ -45,17 +44,9 @@ func (h *AuthorHandler) CreateAuthor(c fiber.Ctx) error {
 func (h *AuthorHandler) GetAuthors(c fiber.Ctx) error {
 	queries := c.Queries()
 
-	page, err := strconv.Atoi(queries["page"])
+	page := queries["page"]
 
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Invalid value for paramater page"})
-	}
-
-	limit, errr := strconv.Atoi(queries["limit"])
-
-	if errr != nil {
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Invalid value for paramater limit"})
-	}
+	limit := queries["limit"]
 
 	search := queries["search"]
 	startDate := queries["startDate"]
