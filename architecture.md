@@ -2,39 +2,39 @@ library-core-service/
 │
 ├─ cmd/
 │ └─ server/
-│   └─ server.go          # App bootstrap (config → DB → middleware → routes)
+│ └─ server.go # App bootstrap (config → DB → middleware → routes)
 │
 ├─ internal/
 │
-│ ├─ model/               # 🔹 CENTRAL DOMAIN + ORM MODELS
+│ ├─ model/ # 🔹 CENTRAL DOMAIN + ORM MODELS
 │ │ ├─ entities.go
 │ │ ├─ domain.go
 │ │ └─ enums.go
 │
-│ ├─ utils/               # 🔹 SHARED, REUSABLE HELPERS (PURE FUNCTIONS)
-│ │ ├─ time.go            # Date parsing, ranges, helpers
-│ │ ├─ pagination.go      # Offset, limit helpers
-│ │ ├─ strings.go         # Search normalization, trimming
-│ │ ├─ pointers.go        # StringPtr, IntPtr helpers
-│ │ └─ ids.go             # UUID validation helpers
+│ ├─ utils/ # 🔹 SHARED, REUSABLE HELPERS (PURE FUNCTIONS)
+│ │ ├─ time.go # Date parsing, ranges, helpers
+│ │ ├─ pagination.go # Offset, limit helpers
+│ │ ├─ strings.go # Search normalization, trimming
+│ │ ├─ pointers.go # StringPtr, IntPtr helpers
+│ │ └─ ids.go # UUID validation helpers
 │
-│ ├─ validator/           # 🔹 CENTRAL REQUEST VALIDATION
+│ ├─ validator/ # 🔹 CENTRAL REQUEST VALIDATION
 │ │ ├─ validator.go
 │ │ └─ errors.go
 │
-│ ├─ mailer/              # 🔹 EMAIL DELIVERY (HOW emails are sent)
-│ │ ├─ mailer.go          # Mailer interface
-│ │ ├─ zeptomail.go       # ZeptoMail implementation
-│ │ └─ types.go           # Email payload structs
+│ ├─ mailer/ # 🔹 EMAIL DELIVERY (HOW emails are sent)
+│ │ ├─ mailer.go # Mailer interface
+│ │ ├─ zeptomail.go # ZeptoMail implementation
+│ │ └─ types.go # Email payload structs
 │
-│ ├─ renderer/            # 🔹 EMAIL RENDERING (WHAT emails look like)
-│ │ ├─ renderer.go        # html/template loader + executor
+│ ├─ renderer/ # 🔹 EMAIL RENDERING (WHAT emails look like)
+│ │ ├─ renderer.go # html/template loader + executor
 │ │ └─ html/
-│ │   ├─ forgot_password.html
-│ │   ├─ welcome.html
-│ │   └─ verify_email.html
+│ │ ├─ forgot_password.html
+│ │ ├─ welcome.html
+│ │ └─ verify_email.html
 │
-│ ├─ routes/              # 🔹 CENTRAL ROUTES REGISTRATION
+│ ├─ routes/ # 🔹 CENTRAL ROUTES REGISTRATION
 │ │ └─ routes.go
 │
 │ ├─ auth/
@@ -42,10 +42,10 @@ library-core-service/
 │ │ │ ├─ handler.go
 │ │ │ └─ routes.go
 │ │ ├─ service/
-│ │ │ └─ service.go       # Business logic + mailer + renderer
+│ │ │ └─ service.go # Business logic + mailer + renderer
 │ │ └─ repository/
-│ │   ├─ repository.go
-│ │   └─ gorm.go
+│ │ ├─ repository.go
+│ │ └─ gorm.go
 │
 │ ├─ books/
 │ │ ├─ handler/
@@ -71,13 +71,13 @@ library-core-service/
 │ │ └─ postgres.go
 │
 │ └─ config/
-│   ├─ types.go
-│   └─ config.go
+│ ├─ types.go
+│ └─ config.go
 │
-├─ migrations/            # SQL migrations
+├─ migrations/ # SQL migrations
 │
-├─ .env                   # Local environment variables
-├─ .gitignore             # Git ignore rules
+├─ .env # Local environment variables
+├─ .gitignore # Git ignore rules
 ├─ go.mod
 ├─ main.go
 └─ README.md

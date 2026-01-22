@@ -55,3 +55,5 @@ func (s *CategoryService) GetCategories() ([]*types.CategoryResponse, error) {
 func (s *CategoryService) DeleteCategory(categoryId string) error {
 	return s.repo.DeleteCategory(categoryId)
 }
+
+
