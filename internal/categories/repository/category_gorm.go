@@ -41,8 +41,11 @@ func (r *GormCategoryRepository) CreateCategory(c *model.CategoryEntity) error {
 func (r *GormCategoryRepository) GetCategories() ([]*types.CategoryResponse, error) {
 	// Implementation for retrieving categories
 	var categories []model.CategoryEntity
+
 	var response []*types.CategoryResponse
+
 	err := r.DB.Model(&model.CategoryEntity{}).Find(&categories).Error
+
 	for _, category := range categories {
 		response = append(response, &types.CategoryResponse{
 			ID:          category.ID,

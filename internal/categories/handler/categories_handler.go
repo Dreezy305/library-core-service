@@ -2,10 +2,8 @@ package handler
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/dreezy305/library-core-service/internal/categories/service"
-	"github.com/dreezy305/library-core-service/internal/model"
 	"github.com/dreezy305/library-core-service/internal/types"
 	"github.com/dreezy305/library-core-service/internal/validators"
 	"github.com/gofiber/fiber/v3"
@@ -33,29 +31,7 @@ func (h *CategoryHandler) CreateCategory(c fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(validators.FormatValidationError(errs))
 	}
 
-	exists, _ := h.Service.CategoryExists(payload.Name)
-
-	if exists {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Category already exists"})
-	}
-
-	fmt.Println(payload, "payload")
-
-	slug := strings.ToLower(strings.ReplaceAll(payload.Name, " ", "-"))
-	fmt.Println(slug, "slug")
-
-	cModel := &model.CategoryEntity{
-		Name: payload.Name,
-		Slug: slug,
-	}
-
-	if payload.Description != nil {
-		cModel.Description = payload.Description
-	}
-
-	fmt.Println(cModel, "model payload")
-
-	error := h.Service.CreateCategory(cModel)
+	error := h.Service.CreateCategory(payload)
 
 	if error != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Failed to create category"})
