@@ -47,7 +47,7 @@ func (r *GormUserRepository) GetUsers(page int, limit int, search *string, start
 
 	}
 
-	err := query.Find(&users).Offset(offset).Limit(limit).Error
+	err := query.Offset(offset).Limit(limit).Order("created_at DESC").Find(&users).Error
 
 	if err != nil {
 		return nil, 0, err
@@ -65,11 +65,12 @@ func (r *GormUserRepository) GetUsers(page int, limit int, search *string, start
 	for _, v := range users {
 		fmt.Println(v, "vvv")
 		response = append(response, &types.UserResponse{
-			ID:        v.ID,
-			FirstName: v.FirstName,
-			LastName:  v.LastName,
-			Email:     *v.Email,
-			CreatedAt: v.CreatedAt,
+			ID:           v.ID,
+			FirstName:    v.FirstName,
+			LastName:     v.LastName,
+			Email:        *v.Email,
+			MemberNumber: v.MemberNumber,
+			CreatedAt:    v.CreatedAt,
 		})
 	}
 

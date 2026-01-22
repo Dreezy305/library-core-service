@@ -39,6 +39,8 @@ func AuthRoutes(app fiber.Router, db *gorm.DB) {
 	authService := AuthService.NewAuthService(*authRepo)
 	authHandler := AuthHandler.NewAuthHandler(authService)
 
+	// scripts.SeedUsers(authService, 100)
+
 	// Define user-related routes here
 	authGroup := app.Group("/auth")
 	authGroup.Post("/register", authHandler.RegisterUserHandler)
