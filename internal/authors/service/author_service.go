@@ -1,6 +1,8 @@
 package service
 
 import (
+	"errors"
+	"fmt"
 	"time"
 
 	"github.com/dreezy305/library-core-service/internal/authors/repository"
@@ -21,8 +23,40 @@ func (s *AuthorService) AuthorExist(email string) (bool, error) {
 	return s.repo.AuthorExist(email)
 }
 
-func (s *AuthorService) CreateAuthor(a *model.AuthorEntity) error {
-	return s.repo.CreateAuthor(a)
+func (s *AuthorService) CreateAuthor(payload types.AuthorPayload) error {
+	exist, _ := s.AuthorExist(payload.Email)
+
+	if exist {
+		return errors.New("Author has already been created")
+	}
+
+	dob, err := time.Parse("2006-01-02", payload.DateOfBirth)
+	if err != nil {
+		return errors.New("dateOfBirth must be in YYYY-MM-DD format")
+	}
+
+	u := &model.AuthorEntity{
+		FirstName:   payload.FirstName,
+		LastName:    payload.LastName,
+		Nationality: payload.Nationality,
+		DateOfBirth: dob,
+		Email:       &payload.Email,
+		Bio:         *payload.Bio,
+		PenName:     *payload.PenName,
+		Website:     *payload.Website,
+		Twitter:     *payload.Twitter,
+		Facebook:    *payload.Facebook,
+		Linkedln:    *payload.Linkedln,
+	}
+
+	errr := s.repo.CreateAuthor(u)
+
+	if errr != nil {
+		fmt.Println(errr)
+		return errors.New("Failed to create author")
+	}
+
+	return nil
 }
 
 func (s *AuthorService) GetAuthors(page int, limit int, search *string, startDate *string, endDate *string) ([]*types.AuthorResponse, int64, error) {

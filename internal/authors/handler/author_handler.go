@@ -3,10 +3,8 @@ package handler
 import (
 	"fmt"
 	"strconv"
-	"time"
 
 	"github.com/dreezy305/library-core-service/internal/authors/service"
-	"github.com/dreezy305/library-core-service/internal/model"
 	"github.com/dreezy305/library-core-service/internal/types"
 	"github.com/dreezy305/library-core-service/internal/validators"
 	"github.com/gofiber/fiber/v3"
@@ -35,35 +33,10 @@ func (h *AuthorHandler) CreateAuthor(c fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(validators.FormatValidationError(errs))
 	}
 
-	exist, _ := h.Service.AuthorExist(payload.Email)
-
-	if exist {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Author has already been created"})
-	}
-
-	dob, err := time.Parse("2006-01-02", payload.DateOfBirth)
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "dateOfBirth must be in YYYY-MM-DD format"})
-	}
-
-	u := &model.AuthorEntity{
-		FirstName:   payload.FirstName,
-		LastName:    payload.LastName,
-		Nationality: payload.Nationality,
-		DateOfBirth: dob,
-		Email:       &payload.Email,
-		Bio:         *payload.Bio,
-		PenName:     *payload.PenName,
-		Website:     *payload.Website,
-		Twitter:     *payload.Twitter,
-		Facebook:    *payload.Facebook,
-		Linkedln:    *payload.Linkedln,
-	}
-
-	error := h.Service.CreateAuthor(u)
+	error := h.Service.CreateAuthor(payload)
 
 	if error != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Failed to create author"})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": error})
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": "Author created successfully"})
