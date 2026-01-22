@@ -56,7 +56,8 @@ func (r *GormAuthorRepository) GetAuthors(page int, limit int, search *string, s
 
 	offset := (page - 1) * limit
 
-	err := query.Find(&authors).Offset(offset).Limit(limit).Error
+	err := query.Offset(offset).Limit(limit).Order("created_at DESC").Find(&authors).Error
+
 	if err != nil {
 		return nil, 0, err
 	}
