@@ -170,13 +170,14 @@ type BookResponse struct {
 }
 
 type UpdateBookPayload struct {
-	Title           *string `json:"title,omitempty"`
-	Description     *string `json:"description,omitempty"`
-	AuthorID        *string `json:"authorId,omitempty"`
-	ISBN            *string `json:"isbn,omitempty"`
-	PublishedYear   *int    `json:"publishedYear,omitempty"`
-	CopiesTotal     *int    `json:"copiesTotal,omitempty"`
-	CopiesAvailable *int    `json:"copiesAvailable,omitempty"`
+	Title           *string   `json:"title,omitempty"`
+	Description     *string   `json:"description,omitempty"`
+	AuthorID        *string   `json:"authorId,omitempty"`
+	ISBN            *string   `json:"isbn,omitempty"`
+	PublishedYear   *int      `json:"publishedYear,omitempty"`
+	CopiesTotal     *int      `json:"copiesTotal,omitempty"`
+	CopiesAvailable *int      `json:"copiesAvailable,omitempty"`
+	CategoryIds     []*string `json:"categoryIds,omitempty"`
 }
 
 type CategoryPayload struct {

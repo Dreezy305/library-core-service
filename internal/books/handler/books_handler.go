@@ -5,7 +5,6 @@ import (
 	"strconv"
 
 	"github.com/dreezy305/library-core-service/internal/books/service"
-	"github.com/dreezy305/library-core-service/internal/model"
 	"github.com/dreezy305/library-core-service/internal/types"
 	"github.com/dreezy305/library-core-service/internal/validators"
 	"github.com/gofiber/fiber/v3"
@@ -71,28 +70,7 @@ func (h *BookHandler) CreateBook(c fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(validators.FormatValidationError(errs))
 	}
 
-	exist, _ := h.service.BookExists(payload.Title)
-
-	if exist {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Book has already been created"})
-	}
-
-	b := &model.BookEntity{
-		Title:       payload.Title,
-		ISBN:        payload.ISBN,
-		CopiesTotal: payload.CopiesTotal,
-		AuthorID:    payload.AuthorID,
-	}
-
-	if payload.Description != nil {
-		b.Description = *payload.Description
-	}
-
-	if payload.PublishedYear != nil {
-		b.PublishedYear = *payload.PublishedYear
-	}
-
-	error := h.service.CreateBook(b)
+	error := h.service.CreateBook(payload)
 	if error != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to create book"})
 	}
