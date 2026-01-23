@@ -53,7 +53,35 @@ func (s *BookService) GetBook(bookId string) (*types.BookResponse, error) {
 }
 
 func (s *BookService) UpdateBook(bookId string, payload *types.UpdateBookPayload) error {
-	return s.repo.UpdateBook(bookId, payload)
+	if payload == nil {
+		return errors.New("no fields provided for update")
+	}
+
+	updates := map[string]interface{}{}
+
+	if payload.Title != nil {
+		updates["title"] = *payload.Title
+	}
+	if payload.Description != nil {
+		updates["description"] = *payload.Description
+	}
+	if payload.ISBN != nil {
+		updates["isbn"] = *payload.ISBN
+	}
+	if payload.PublishedYear != nil {
+		updates["published_year"] = *payload.PublishedYear
+	}
+	if payload.CopiesTotal != nil {
+		updates["copies_total"] = *payload.CopiesTotal
+	}
+	if payload.CopiesAvailable != nil {
+		updates["copies_available"] = *payload.CopiesAvailable
+	}
+	if payload.AuthorID != nil {
+		updates["author_id"] = *payload.AuthorID
+	}
+
+	return s.repo.UpdateBook(bookId, updates)
 }
 
 func (s *BookService) DecrementAvailable(bookId string) error {
