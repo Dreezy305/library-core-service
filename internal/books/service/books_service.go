@@ -80,6 +80,9 @@ func (s *BookService) UpdateBook(bookId string, payload *types.UpdateBookPayload
 	if payload.AuthorID != nil {
 		updates["author_id"] = *payload.AuthorID
 	}
+	if payload.CategoryIds != nil {
+		updates["categories"] = payload.CategoryIds
+	}
 
 	return s.repo.UpdateBook(bookId, updates)
 }
