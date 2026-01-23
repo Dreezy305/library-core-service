@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"errors"
+
 	"github.com/dreezy305/library-core-service/internal/model"
 	"github.com/dreezy305/library-core-service/internal/types"
 )
@@ -30,29 +32,34 @@ func (s *BookRepository) GetBook(bookId string) (*types.BookResponse, error) {
 }
 
 func (s *BookRepository) UpdateBook(bookId string, payload *types.UpdateBookPayload) error {
-	updates := &types.UpdateBookPayload{}
+	if payload == nil {
+		return errors.New("payload cannot be empty")
+	}
+
+	updates := map[string]interface{}{}
 
 	if payload.Title != nil {
-		updates.Title = payload.Title
+		updates["title"] = *payload.Title
 	}
 	if payload.Description != nil {
-		updates.Description = payload.Description
+		updates["description"] = *payload.Description
 	}
 	if payload.ISBN != nil {
-		updates.ISBN = payload.ISBN
+		updates["isbn"] = *payload.ISBN
 	}
 	if payload.PublishedYear != nil {
-		updates.PublishedYear = payload.PublishedYear
+		updates["published_year"] = *payload.PublishedYear
 	}
 	if payload.CopiesTotal != nil {
-		updates.CopiesTotal = payload.CopiesTotal
+		updates["copies_total"] = *payload.CopiesTotal
 	}
 	if payload.CopiesAvailable != nil {
-		updates.CopiesAvailable = payload.CopiesAvailable
+		updates["copies_available"] = *payload.CopiesAvailable
 	}
 	if payload.AuthorID != nil {
-		updates.AuthorID = payload.AuthorID
+		updates["author_id"] = *payload.AuthorID
 	}
+
 	return s.gormRepo.UpdateBook(bookId, updates)
 }
 

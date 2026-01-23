@@ -135,7 +135,8 @@ func (r *GormBookRepository) GetBook(bookId string) (*types.BookResponse, error)
 	return response, nil
 }
 
-func (r *GormBookRepository) UpdateBook(bookId string, payload *types.UpdateBookPayload) error {
+func (r *GormBookRepository) UpdateBook(bookId string, payload map[string]interface{}) error {
+	
 
 	err := r.DB.Model(&model.BookEntity{}).Where("id = ?", bookId).Updates(payload).Error
 	if err != nil {
