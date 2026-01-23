@@ -136,31 +136,8 @@ func (r *GormBookRepository) GetBook(bookId string) (*types.BookResponse, error)
 }
 
 func (r *GormBookRepository) UpdateBook(bookId string, payload *types.UpdateBookPayload) error {
-	updates := map[string]interface{}{}
 
-	if payload.Title != nil {
-		updates["title"] = *payload.Title
-	}
-	if payload.Description != nil {
-		updates["description"] = *payload.Description
-	}
-	if payload.ISBN != nil {
-		updates["isbn"] = *payload.ISBN
-	}
-	if payload.PublishedYear != nil {
-		updates["published_year"] = *payload.PublishedYear
-	}
-	if payload.CopiesTotal != nil {
-		updates["copies_total"] = *payload.CopiesTotal
-	}
-	if payload.CopiesAvailable != nil {
-		updates["copies_available"] = *payload.CopiesAvailable
-	}
-	if payload.AuthorID != nil {
-		updates["author_id"] = *payload.AuthorID
-	}
-
-	err := r.DB.Model(&model.BookEntity{}).Where("id = ?", bookId).Updates(updates).Error
+	err := r.DB.Model(&model.BookEntity{}).Where("id = ?", bookId).Updates(payload).Error
 	if err != nil {
 		return err
 	}

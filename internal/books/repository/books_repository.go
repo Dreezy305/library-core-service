@@ -30,7 +30,30 @@ func (s *BookRepository) GetBook(bookId string) (*types.BookResponse, error) {
 }
 
 func (s *BookRepository) UpdateBook(bookId string, payload *types.UpdateBookPayload) error {
-	return s.gormRepo.UpdateBook(bookId, payload)
+	updates := &types.UpdateBookPayload{}
+
+	if payload.Title != nil {
+		updates.Title = payload.Title
+	}
+	if payload.Description != nil {
+		updates.Description = payload.Description
+	}
+	if payload.ISBN != nil {
+		updates.ISBN = payload.ISBN
+	}
+	if payload.PublishedYear != nil {
+		updates.PublishedYear = payload.PublishedYear
+	}
+	if payload.CopiesTotal != nil {
+		updates.CopiesTotal = payload.CopiesTotal
+	}
+	if payload.CopiesAvailable != nil {
+		updates.CopiesAvailable = payload.CopiesAvailable
+	}
+	if payload.AuthorID != nil {
+		updates.AuthorID = payload.AuthorID
+	}
+	return s.gormRepo.UpdateBook(bookId, updates)
 }
 
 func (s *BookRepository) DecrementAvailable(bookId string) error {
