@@ -71,14 +71,18 @@ func (r *GormBookRepository) GetBooks(page int, limit int, search *string) ([]*t
 	var response []*types.BookResponse
 
 	for i, book := range books {
+
 		var categoryResponse []*types.CategoryResponse
 
 		for _, cat := range book.Categories {
+
 			categoryResponse = append(categoryResponse, &types.CategoryResponse{
 				ID:          cat.ID,
 				Name:        cat.Name,
 				Description: cat.Description,
 				Slug:        cat.Slug,
+				IsActive:    cat.IsActive,
+				CreatedAt:   cat.CreatedAt,
 			})
 
 		}
@@ -101,7 +105,7 @@ func (r *GormBookRepository) GetBooks(page int, limit int, search *string) ([]*t
 				Nationality: book.Author.Nationality,
 				DateOfBirth: book.Author.DateOfBirth.Format("2006-01-02"),
 			},
-			Categories: *categoryResponse,
+			Categories: categoryResponse,
 		})
 		books[i] = book
 	}
