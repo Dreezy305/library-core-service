@@ -69,13 +69,9 @@ func (r *GormBookRepository) GetBooks(page int, limit int, search *string) ([]*t
 	}
 
 	var response []*types.BookResponse
-
-	for i, book := range books {
-
+	for _, book := range books {
 		var categoryResponse []*types.CategoryResponse
-
 		for _, cat := range book.Categories {
-
 			categoryResponse = append(categoryResponse, &types.CategoryResponse{
 				ID:          cat.ID,
 				Name:        cat.Name,
@@ -86,7 +82,6 @@ func (r *GormBookRepository) GetBooks(page int, limit int, search *string) ([]*t
 			})
 
 		}
-
 		response = append(response, &types.BookResponse{
 			ID:              book.ID,
 			Title:           book.Title,
@@ -107,7 +102,6 @@ func (r *GormBookRepository) GetBooks(page int, limit int, search *string) ([]*t
 			},
 			Categories: categoryResponse,
 		})
-		books[i] = book
 	}
 	return response, total, nil
 }
