@@ -80,7 +80,6 @@ func (r *GormBookRepository) GetBooks(page int, limit int, search *string) ([]*t
 				IsActive:    cat.IsActive,
 				CreatedAt:   cat.CreatedAt,
 			})
-
 		}
 		response = append(response, &types.BookResponse{
 			ID:              book.ID,
