@@ -92,7 +92,6 @@ func BookRoutes(app fiber.Router, db *gorm.DB) {
 	bookGroup.Get("/:id", bookHandler.GetBook)
 	bookGroup.Post("/create", bookHandler.CreateBook)
 	bookGroup.Put("/:id", bookHandler.UpdateBook)
-
 }
 
 // BOOK CATEGORIES ROUTES
