@@ -16,6 +16,7 @@ import (
 	LoansHandler "github.com/dreezy305/library-core-service/internal/loans/handler"
 	LoansRepository "github.com/dreezy305/library-core-service/internal/loans/repository"
 	LoansService "github.com/dreezy305/library-core-service/internal/loans/service"
+	"github.com/dreezy305/library-core-service/internal/middleware"
 	UserHandler "github.com/dreezy305/library-core-service/internal/users/handler"
 	UserRepository "github.com/dreezy305/library-core-service/internal/users/repository"
 	UserService "github.com/dreezy305/library-core-service/internal/users/service"
@@ -57,7 +58,7 @@ func UserRoutes(app fiber.Router, db *gorm.DB) {
 	userHandler := UserHandler.NewUserHandler(userService)
 
 	// Define user-related routes here
-	userGroup := app.Group("/users")
+	userGroup := app.Group("/users", middleware.JWTProtected())
 	userGroup.Get("/", userHandler.GetUsers)
 	userGroup.Get("/me/:id", userHandler.GetUser)
 	userGroup.Put("/update/:id", userHandler.UpdateUser)
@@ -71,7 +72,7 @@ func AuthorRoutes(app fiber.Router, db *gorm.DB) {
 	authorHandler := AuthorHandler.NewAuthorHandler(authorService)
 
 	// Define author-related routes here
-	authorGroup := app.Group("/authors")
+	authorGroup := app.Group("/authors", middleware.JWTProtected())
 	authorGroup.Get("/", authorHandler.GetAuthors)
 	authorGroup.Get("/:id", authorHandler.GetAuthor)
 	authorGroup.Post("/create", authorHandler.CreateAuthor)
@@ -86,7 +87,7 @@ func BookRoutes(app fiber.Router, db *gorm.DB) {
 	bookHandler := BookHandler.NewBookHandler(bookService)
 
 	// Define book-related routes here
-	bookGroup := app.Group("/books")
+	bookGroup := app.Group("/books", middleware.JWTProtected())
 	bookGroup.Get("/", bookHandler.GetBooks)
 	bookGroup.Get("/:id", bookHandler.GetBook)
 	bookGroup.Post("/create", bookHandler.CreateBook)
@@ -102,7 +103,7 @@ func BookCategoryRoutes(app fiber.Router, db *gorm.DB) {
 	categoryHandler := CategoryHandler.NewCategoryHandler(categoryService)
 
 	// Define book category-related routes here
-	categoryGroup := app.Group("/categories")
+	categoryGroup := app.Group("/categories", middleware.JWTProtected())
 	categoryGroup.Get("/", categoryHandler.GetCategories)
 	categoryGroup.Post("/create", categoryHandler.CreateCategory)
 	categoryGroup.Delete("/delete/:id", categoryHandler.DeleteCategory)
@@ -122,7 +123,7 @@ func LoanRoutes(app fiber.Router, db *gorm.DB) {
 	loanHandler := LoansHandler.NewLoansHandler(loanService)
 
 	// Define loan-related routes here
-	loanGroup := app.Group("/loans")
+	loanGroup := app.Group("/loans", middleware.JWTProtected())
 	loanGroup.Get("/", loanHandler.GetLoans)
 	loanGroup.Get("/member/:memberId", loanHandler.GetMemberLoans)
 	loanGroup.Post("/:memberId/:bookId", loanHandler.CreateLoan)
