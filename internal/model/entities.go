@@ -32,7 +32,7 @@ type BookEntity struct {
 	DeletedAt       gorm.DeletedAt `gorm:"index"`
 
 	Author     AuthorEntity     `gorm:"foreignKey:AuthorID"`
-	Categories []CategoryEntity `gorm:"many2many:category_entities;"`
+	Categories []CategoryEntity `gorm:"many2many:book_categories;"`
 }
 
 type AuthorEntity struct {
@@ -103,5 +103,5 @@ type CategoryEntity struct {
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	Books []*BookEntity `gorm:"many2many:category_entities;"`
+	Books []*BookEntity `gorm:"many2many:book_categories;"`
 }
