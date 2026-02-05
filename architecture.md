@@ -7,45 +7,40 @@ library-core-service/
 ├─ internal/
 │
 │ ├─ model/ # 🔹 CENTRAL DOMAIN + ORM MODELS
-│ │ ├─ entities.go
-│ │ ├─ domain.go
-│ │ └─ enums.go
+│ │ ├─ entities.go # GORM entities (User, Book, Order, Payment, etc)
+│ │ ├─ domain.go # Request / response DTOs
+│ │ └─ enums.go # Status enums (LoanStatus, OrderStatus, PaymentStatus)
 │
-│ ├─ utils/ # 🔹 SHARED, REUSABLE HELPERS (PURE FUNCTIONS)
-│ │ ├─ time.go # Date parsing, ranges, helpers
-│ │ ├─ pagination.go # Offset, limit helpers
-│ │ ├─ strings.go # Search normalization, trimming
-│ │ ├─ pointers.go # StringPtr, IntPtr helpers
-│ │ └─ ids.go # UUID validation helpers
+│ ├─ utils/ # 🔹 SHARED HELPERS
+│ │ ├─ time.go
+│ │ ├─ pagination.go
+│ │ ├─ strings.go
+│ │ ├─ pointers.go
+│ │ └─ ids.go
 │
-│ ├─ validator/ # 🔹 CENTRAL REQUEST VALIDATION
+│ ├─ validator/
 │ │ ├─ validator.go
 │ │ └─ errors.go
 │
-│ ├─ mailer/ # 🔹 EMAIL DELIVERY (HOW emails are sent)
-│ │ ├─ mailer.go # Mailer interface
-│ │ ├─ zeptomail.go # ZeptoMail implementation
-│ │ └─ types.go # Email payload structs
+│ ├─ mailer/ # 🔹 EMAIL DELIVERY
+│ │ ├─ mailer.go
+│ │ ├─ zeptomail.go
+│ │ └─ types.go
 │
-│ ├─ renderer/ # 🔹 EMAIL RENDERING (WHAT emails look like)
-│ │ ├─ renderer.go # html/template loader + executor
+│ ├─ renderer/ # 🔹 EMAIL TEMPLATES
+│ │ ├─ renderer.go
 │ │ └─ html/
 │ │ ├─ forgot_password.html
 │ │ ├─ welcome.html
 │ │ └─ verify_email.html
 │
-│ ├─ routes/ # 🔹 CENTRAL ROUTES REGISTRATION
+│ ├─ routes/
 │ │ └─ routes.go
 │
 │ ├─ auth/
 │ │ ├─ handler/
-│ │ │ ├─ handler.go
-│ │ │ └─ routes.go
 │ │ ├─ service/
-│ │ │ └─ service.go # Business logic + mailer + renderer
 │ │ └─ repository/
-│ │ ├─ repository.go
-│ │ └─ gorm.go
 │
 │ ├─ books/
 │ │ ├─ handler/
@@ -62,6 +57,19 @@ library-core-service/
 │ │ ├─ service/
 │ │ └─ repository/
 │
+│ ├─ orders/ # 🆕 ORDERS MODULE
+│ │ ├─ handler/
+│ │ ├─ service/
+│ │ └─ repository/
+│
+│ ├─ payments/ # 🆕 PAYMENTS MODULE
+│ │ ├─ handler/
+│ │ ├─ service/
+│ │ └─ repository/
+│
+│ ├─ webhooks/ # 🆕 PAYMENT WEBHOOK LISTENERS
+│ │ └─ handler/
+│
 │ ├─ middleware/
 │ │ ├─ auth.go
 │ │ ├─ logging.go
@@ -74,10 +82,10 @@ library-core-service/
 │ ├─ types.go
 │ └─ config.go
 │
-├─ migrations/ # SQL migrations
+├─ migrations/
 │
-├─ .env # Local environment variables
-├─ .gitignore # Git ignore rules
+├─ .env
+├─ .gitignore
 ├─ go.mod
 ├─ main.go
 └─ README.md
