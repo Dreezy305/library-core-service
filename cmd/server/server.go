@@ -30,6 +30,7 @@ func Start() {
 	routes.BookRoutes(api, database)
 	routes.BookCategoryRoutes(api, database)
 	routes.LoanRoutes(api, database)
+	routes.OrderRoutes(api, database)
 
 	// Implementation of server start logic goes here
 	fmt.Println("Server started")

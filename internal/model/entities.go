@@ -105,3 +105,34 @@ type CategoryEntity struct {
 
 	Books []*BookEntity `gorm:"many2many:book_categories;"`
 }
+
+type OrderEntity struct {
+	ID     string `gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
+	UserID string `gorm:"not null;index"`
+
+	OrderDate   time.Time `gorm:"not null"`
+	Status      string    `gorm:"type:varchar(20);not null"`
+	Quantity    int       `gorm:"not null"`
+	TotalAmount float64   `gorm:"not null"`
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
+
+	User UserEntity `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE"`
+}
+
+type OrderItemEntity struct {
+	ID      string `gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
+	OrderID string `gorm:"not null;index"`
+	BookID  string `gorm:"not null;index"`
+
+	Quantity int `gorm:"not null"`
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
+
+	Order OrderEntity `gorm:"foreignKey:OrderID;constraint:OnDelete:CASCADE"`
+	Book  BookEntity  `gorm:"foreignKey:BookID;constraint:OnDelete:CASCADE"`
+}

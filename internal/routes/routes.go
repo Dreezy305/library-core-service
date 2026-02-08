@@ -128,3 +128,14 @@ func LoanRoutes(app fiber.Router, db *gorm.DB) {
 	loanGroup.Post("/:memberId/:bookId", loanHandler.CreateLoan)
 	loanGroup.Put("/:loanId/:memberId/:bookId", loanHandler.ReturnBook)
 }
+
+func OrderRoutes(app fiber.Router, db *gorm.DB) {
+	// Define order-related routes here
+
+	orderGoup := app.Group("/orders", middleware.JWTProtected())
+	orderGoup.Get("/", func(c fiber.Ctx) error {
+		return c.JSON(fiber.Map{
+			"message": "Orders route is working",
+		})
+	})
+}
