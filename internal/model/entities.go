@@ -110,16 +110,18 @@ type OrderEntity struct {
 	ID     string `gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
 	UserID string `gorm:"not null;index"`
 
-	OrderDate   time.Time `gorm:"not null"`
-	Status      string    `gorm:"type:varchar(20);not null"`
-	Quantity    int       `gorm:"not null"`
-	TotalAmount float64   `gorm:"not null"`
+	Status      string  `gorm:"type:varchar(20);not null"`
+	TotalAmount float64 `gorm:"not null"`
+
+	PaymentReference string `gorm:"not null;uniqueIndex"`
+	PaidAt           *time.Time
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	User UserEntity `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE"`
+	User  UserEntity        `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE"`
+	Items []OrderItemEntity `gorm:"foreignKey:OrderID"`
 }
 
 type OrderItemEntity struct {
@@ -127,7 +129,9 @@ type OrderItemEntity struct {
 	OrderID string `gorm:"not null;index"`
 	BookID  string `gorm:"not null;index"`
 
-	Quantity int `gorm:"not null"`
+	Quantity   int     `gorm:"not null"`
+	UnitPrice  float64 `gorm:"not null"`
+	TotalPrice float64 `gorm:"not null"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
