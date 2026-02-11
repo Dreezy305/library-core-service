@@ -220,3 +220,13 @@ type LoanPayload struct {
 type MemberLoansResponse struct {
 	Loans []*LoanResponse `json:"loans"`
 }
+
+type InitiateOrderPayload struct {
+	UserID string           `json:"userId"`
+	Items  []OrderItemInput `json:"items"`
+}
+
+type OrderItemInput struct {
+	BookID   string `json:"bookId"`
+	Quantity int    `json:"quantity"`
+}

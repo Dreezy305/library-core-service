@@ -17,10 +17,14 @@ import (
 	LoansRepository "github.com/dreezy305/library-core-service/internal/loans/repository"
 	LoansService "github.com/dreezy305/library-core-service/internal/loans/service"
 	"github.com/dreezy305/library-core-service/internal/middleware"
+	OrderHandler "github.com/dreezy305/library-core-service/internal/orders/handler"
+	OrderRepository "github.com/dreezy305/library-core-service/internal/orders/repository"
+	OrderService "github.com/dreezy305/library-core-service/internal/orders/service"
 	UserHandler "github.com/dreezy305/library-core-service/internal/users/handler"
 	UserRepository "github.com/dreezy305/library-core-service/internal/users/repository"
 	UserService "github.com/dreezy305/library-core-service/internal/users/service"
 	"github.com/gofiber/fiber/v3"
+
 	"github.com/gofiber/fiber/v3/middleware/healthcheck"
 	"gorm.io/gorm"
 )
@@ -131,11 +135,13 @@ func LoanRoutes(app fiber.Router, db *gorm.DB) {
 
 func OrderRoutes(app fiber.Router, db *gorm.DB) {
 	// Define order-related routes here
+	orderGormRepo := OrderRepository.NewGormOrderRepository(db)
+	orderRepo := OrderRepository.NewOrderRepository(orderGormRepo)
+	orderService := OrderService.NewOrderService(*orderRepo)
+	orderHandler := OrderHandler.NewOrderHandler(orderService)
 
-	orderGoup := app.Group("/orders", middleware.JWTProtected())
-	orderGoup.Get("/", func(c fiber.Ctx) error {
-		return c.JSON(fiber.Map{
-			"message": "Orders route is working",
-		})
-	})
+	orderGroup := app.Group("/orders", middleware.JWTProtected())
+	orderGroup.Get("/user/:userId", orderHandler.ListOrdersByUserID)
+	orderGroup.Get("/:id", orderHandler.GetOrder)
+	orderGroup.Post("/create", orderHandler.CreateOrder)
 }
