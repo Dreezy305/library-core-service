@@ -97,6 +97,7 @@ func (s *OrderService) CreateOrder(payload types.InitiateOrderPayload) error {
 
 func (s *OrderService) MarkOrderAsPaid(orderId string) error {
 	return s.DB.Transaction(func(tx *gorm.DB) error {
+
 		order, err := s.repo.GetOrderByID(tx, orderId)
 		if err != nil {
 			return err
@@ -106,20 +107,26 @@ func (s *OrderService) MarkOrderAsPaid(orderId string) error {
 		}
 
 		if order.Status != string(constants.OrderPending) {
-			return errors.New("order has already been paid or is in an invalid state")
+			return errors.New("order already processed")
 		}
 
-		// UPDATE ORDER STATUS
+		// 1️⃣ Decrement stock for each item
+		for _, item := range order.Items {
+			if err := s.bookRepo.DecrementAvailableTx(tx, item.BookID, item.Quantity); err != nil {
+				return err
+			}
+		}
+
+		// 2️⃣ Update order status
 		if err := s.repo.UpdateOrderStatus(tx, orderId, string(constants.OrderPaid)); err != nil {
 			return err
 		}
 
-		orderItems := order.Items
-		for _, item := range orderItems {
-			if err := s.repo.UpdateOrderItemStatus(tx, item.ID, string(constants.OrderPaid)); err != nil {
-				return err
-			}
+		// 3️⃣ Update all order items in one query
+		if err := s.repo.UpdateOrderItemStatus(tx, orderId, string(constants.OrderPaid)); err != nil {
+			return err
 		}
+
 		return nil
 	})
 }

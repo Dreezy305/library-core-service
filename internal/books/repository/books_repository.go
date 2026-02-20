@@ -3,6 +3,7 @@ package repository
 import (
 	"github.com/dreezy305/library-core-service/internal/model"
 	"github.com/dreezy305/library-core-service/internal/types"
+	"gorm.io/gorm"
 )
 
 type BookRepository struct {
@@ -36,6 +37,10 @@ func (s *BookRepository) UpdateBook(bookId string, payload map[string]interface{
 
 func (s *BookRepository) DecrementAvailable(bookId string) error {
 	return s.gormRepo.DecrementAvailable(bookId)
+}
+
+func (s *BookRepository) DecrementAvailableTx(tx *gorm.DB, bookId string, qty int) error {
+	return s.gormRepo.DecrementAvailableTx(tx, bookId, qty)
 }
 
 func (s *BookRepository) IncrementAvailable(bookId string) error {
