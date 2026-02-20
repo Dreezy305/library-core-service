@@ -20,16 +20,17 @@ func (h *OrderHandler) CreateOrder(c fiber.Ctx) error {
 		return c.Status(fiber.StatusForbidden).JSON(validators.FormatValidationError(err))
 	}
 
-	// Here you would typically call the service to create the order
-	// For example:
-	// err := h.service.CreateOrder(&model.OrderEntity{
-	// 	UserID: payload.UserID,
-	// 	Items:  payload.Items, // You would need to convert OrderItemInput to the appropriate model
-	// })
-	// if err != nil {
-	// 	return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to create order"})
-	// }
-	return c.JSON(fiber.Map{"message": "Create order endpoint"})
+	errs := validators.ValidateStruct(payload)
+	if errs != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(validators.FormatValidationError(errs))
+	}
+
+	error := h.service.CreateOrder(payload)
+
+	if error != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to create order"})
+	}
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": "Create order endpoint"})
 }
 
 func (h *OrderHandler) GetOrder(c fiber.Ctx) error {

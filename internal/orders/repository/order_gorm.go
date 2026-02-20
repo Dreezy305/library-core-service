@@ -13,8 +13,12 @@ func NewGormOrderRepository(db *gorm.DB) *GormOrderRepository {
 	return &GormOrderRepository{DB: db}
 }
 
-func (r *GormOrderRepository) CreateOrder(order *model.OrderEntity) error {
-	return r.DB.Create(order).Error
+func (r *GormOrderRepository) CreateOrder(tx *gorm.DB, order *model.OrderEntity) error {
+	return tx.Create(order).Error
+}
+
+func (r *GormOrderRepository) CreateOrderItems(tx *gorm.DB, items []*model.OrderItemEntity) error {
+	return tx.Create(&items).Error // batch insert
 }
 
 func (r *GormOrderRepository) GetOrderByID(id string) (*model.OrderEntity, error) {

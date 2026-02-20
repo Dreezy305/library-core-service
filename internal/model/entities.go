@@ -30,6 +30,7 @@ type BookEntity struct {
 	CreatedAt       time.Time
 	UpdatedAt       time.Time
 	DeletedAt       gorm.DeletedAt `gorm:"index"`
+	Price           int64          `gorm:"not null"`
 
 	Author     AuthorEntity     `gorm:"foreignKey:AuthorID"`
 	Categories []CategoryEntity `gorm:"many2many:book_categories;"`
@@ -110,8 +111,8 @@ type OrderEntity struct {
 	ID     string `gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
 	UserID string `gorm:"not null;index"`
 
-	Status      string  `gorm:"type:varchar(20);not null"`
-	TotalAmount float64 `gorm:"not null"`
+	Status      string `gorm:"type:varchar(20);not null"`
+	TotalAmount int64  `gorm:"not null"`
 
 	PaymentReference string `gorm:"not null;uniqueIndex"`
 	PaidAt           *time.Time
@@ -129,13 +130,14 @@ type OrderItemEntity struct {
 	OrderID string `gorm:"not null;index"`
 	BookID  string `gorm:"not null;index"`
 
-	Quantity   int     `gorm:"not null"`
-	UnitPrice  float64 `gorm:"not null"`
-	TotalPrice float64 `gorm:"not null"`
+	Quantity   int   `gorm:"not null"`
+	UnitPrice  int64 `gorm:"not null"`
+	TotalPrice int64 `gorm:"not null"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
+	Status    string         `gorm:"type:varchar(20);not null"`
 
 	Order OrderEntity `gorm:"foreignKey:OrderID;constraint:OnDelete:CASCADE"`
 	Book  BookEntity  `gorm:"foreignKey:BookID;constraint:OnDelete:CASCADE"`

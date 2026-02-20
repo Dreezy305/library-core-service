@@ -151,6 +151,7 @@ type BookPayload struct {
 	ISBN          *string `json:"isbn,omitempty"`
 	PublishedYear *int    `json:"publishedYear,omitempty"`
 	CopiesTotal   int     `json:"copiesTotal"`
+	Price         int64   `json:"price"`
 }
 
 type BookResponse struct {
@@ -164,6 +165,7 @@ type BookResponse struct {
 	CopiesAvailable int       `json:"copiesAvailable"`
 	CreatedAt       time.Time `json:"createdAt"`
 	UpdatedAt       time.Time `json:"updatedAt"`
+	Price           int64     `json:"price"`
 
 	Author     *AuthorResponse     `json:"author,omitempty"`
 	Categories []*CategoryResponse `json:"categories,omitempty"`
@@ -178,6 +180,7 @@ type UpdateBookPayload struct {
 	CopiesTotal     *int      `json:"copiesTotal,omitempty"`
 	CopiesAvailable *int      `json:"copiesAvailable,omitempty"`
 	CategoryIds     []*string `json:"categoryIds,omitempty"`
+	Price           *int64    `json:"price,omitempty"`
 }
 
 type CategoryPayload struct {

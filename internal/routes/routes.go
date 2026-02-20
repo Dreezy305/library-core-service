@@ -134,10 +134,16 @@ func LoanRoutes(app fiber.Router, db *gorm.DB) {
 }
 
 func OrderRoutes(app fiber.Router, db *gorm.DB) {
+	bookGormRepo := BookRepository.NewGormBookRepository(db)
+	bookRepo := BookRepository.NewBookRepository(bookGormRepo)
+
+	userGormRepo = UserRepository.NewGormUserRepository(db)
+	userRepo := UserRepository.NewUserRepository(userGormRepo)
+
 	// Define order-related routes here
 	orderGormRepo := OrderRepository.NewGormOrderRepository(db)
 	orderRepo := OrderRepository.NewOrderRepository(orderGormRepo)
-	orderService := OrderService.NewOrderService(*orderRepo)
+	orderService := OrderService.NewOrderService(*orderRepo, bookRepo, userRepo, db)
 	orderHandler := OrderHandler.NewOrderHandler(orderService)
 
 	orderGroup := app.Group("/orders", middleware.JWTProtected())

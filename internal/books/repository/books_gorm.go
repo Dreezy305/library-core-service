@@ -122,6 +122,7 @@ func (r *GormBookRepository) GetBook(bookId string) (*types.BookResponse, error)
 		CopiesTotal:     book.CopiesTotal,
 		CopiesAvailable: book.CopiesAvailable,
 		CreatedAt:       book.CreatedAt,
+		Price:           book.Price,
 		Author: &types.AuthorResponse{
 			ID:          book.Author.ID,
 			FirstName:   book.Author.FirstName,
