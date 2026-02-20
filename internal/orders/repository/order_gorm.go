@@ -24,44 +24,23 @@ func (r *GormOrderRepository) CreateOrderItems(tx *gorm.DB, items []*model.Order
 }
 
 func (r *GormOrderRepository) UpdateOrderStatus(tx *gorm.DB, orderId string, status string) error {
-	var order model.OrderEntity
-	err := tx.Preload("Items").Find(&order, "id = ?", orderId).Error
-	if err != nil {
-		return err
-	}
-	if order.ID == "" {
-		return gorm.ErrRecordNotFound
-	}
-
-	if status != "" {
-		order.Status = status
-		now := time.Now()
-		order.PaidAt = &now
-	}
-
-	return tx.Save(&order).Error
+	return tx.Model(&model.OrderEntity{}).
+		Where("id = ?", orderId).
+		Updates(map[string]interface{}{
+			"Status": status,
+			"PaidAt": time.Now(),
+		}).Error
 }
 
-func (r *GormOrderRepository) UpdateOrderItems(tx *gorm.DB, ItemId string, status string) error {
-	var item model.OrderItemEntity
-	err := tx.Find(&item, "id = ?", ItemId).Error
-	if err != nil {
-		return err
-	}
-	if item.ID == "" {
-		return gorm.ErrRecordNotFound
-	}
-
-	if status != "" {
-		item.Status = status
-	}
-
-	return tx.Save(&item).Error
+func (r *GormOrderRepository) UpdateOrderItemStatus(tx *gorm.DB, orderId string, status string) error {
+	return tx.Model(&model.OrderItemEntity{}).
+		Where("order_id = ?", orderId).
+		Update("Status", status).Error
 }
 
-func (r *GormOrderRepository) GetOrderByID(id string) (*model.OrderEntity, error) {
+func (r *GormOrderRepository) GetOrderByID(tx *gorm.DB, id string) (*model.OrderEntity, error) {
 	var order model.OrderEntity
-	err := r.DB.Preload("Items").Preload("User").First(&order, "id = ?", id).Error
+	err := tx.Preload("Items").Preload("User").Find(&order, "id = ?", id).Error
 	if err != nil {
 		return nil, err
 	}

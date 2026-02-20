@@ -22,16 +22,16 @@ func (s *OrderRepository) CreateOrderItems(tx *gorm.DB, orderItems []*model.Orde
 	return s.gormRepo.CreateOrderItems(tx, orderItems)
 }
 
-func (s *OrderRepository) GetOrderByID(id string) (*model.OrderEntity, error) {
-	return s.gormRepo.GetOrderByID(id)
+func (s *OrderRepository) GetOrderByID(tx *gorm.DB, id string) (*model.OrderEntity, error) {
+	return s.gormRepo.GetOrderByID(tx, id)
 }
 
 func (s *OrderRepository) UpdateOrderStatus(tx *gorm.DB, orderId string, status string) error {
 	return s.gormRepo.UpdateOrderStatus(tx, orderId, status)
 }
 
-func (s *OrderRepository) UpdateOrderItems(tx *gorm.DB, ItemId string, status string) error {
-	return s.gormRepo.UpdateOrderItems(tx, ItemId, status)
+func (s *OrderRepository) UpdateOrderItemStatus(tx *gorm.DB, ItemId string, status string) error {
+	return s.gormRepo.UpdateOrderItemStatus(tx, ItemId, status)
 }
 
 func (s *OrderRepository) ListOrdersByUserID(userID string) ([]*model.OrderEntity, error) {
