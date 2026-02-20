@@ -95,6 +95,31 @@ func (s *OrderService) CreateOrder(payload types.InitiateOrderPayload) error {
 	})
 }
 
+func (s *OrderService) MarkOrderAsPaid(orderId string) error {
+	return s.DB.Transaction(func(tx *gorm.DB) error {
+		order, err := s.repo.GetOrderByID(orderId)
+		if err != nil {
+			return err
+		}
+		if order == nil {
+			return errors.New("order not found")
+		}
+
+		order.Status = string(constants.OrderPaid)
+
+		// UPDATE ORDER STATUS
+		if err := s.repo.UpdateOrderStatus(tx, orderId, string(constants.OrderPaid)); err != nil {
+			return err
+		}
+
+		orderItems := order.Items
+		for _, item := range orderItems {
+			item.Status = string(constants.OrderPaid)
+			return s.repo.UpdateOrderItems(tx, item.ID, item.Status)
+		}
+		return nil
+	})
+}
 func (s *OrderService) GetOrderByID(id string) (*model.OrderEntity, error) {
 	return s.repo.GetOrderByID(id)
 }

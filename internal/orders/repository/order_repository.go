@@ -26,6 +26,14 @@ func (s *OrderRepository) GetOrderByID(id string) (*model.OrderEntity, error) {
 	return s.gormRepo.GetOrderByID(id)
 }
 
+func (s *OrderRepository) UpdateOrderStatus(tx *gorm.DB, orderId string, status string) error {
+	return s.gormRepo.UpdateOrderStatus(tx, orderId, status)
+}
+
+func (s *OrderRepository) UpdateOrderItems(tx *gorm.DB, ItemId string, status string) error {
+	return s.gormRepo.UpdateOrderItems(tx, ItemId, status)
+}
+
 func (s *OrderRepository) ListOrdersByUserID(userID string) ([]*model.OrderEntity, error) {
 	return s.gormRepo.ListOrdersByUserID(userID)
 }
