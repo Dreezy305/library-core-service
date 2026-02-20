@@ -14,6 +14,7 @@ type OrderHandler struct {
 func NewOrderHandler(service *service.OrderService) *OrderHandler {
 	return &OrderHandler{service: service}
 }
+
 func (h *OrderHandler) CreateOrder(c fiber.Ctx) error {
 	var payload types.InitiateOrderPayload
 	if err := c.Bind().Body(&payload); err != nil {
@@ -31,6 +32,14 @@ func (h *OrderHandler) CreateOrder(c fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Failed to create order"})
 	}
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": "Create order endpoint"})
+}
+
+func (h *OrderHandler) MarkOrderAsPaid(c fiber.Ctx) error {
+	orderId := c.Params("orderId")
+	if orderId == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "id parameter is missing"})
+	}
+	return c.JSON(fiber.Map{"message": "Update order endpoint"})
 }
 
 func (h *OrderHandler) GetOrder(c fiber.Ctx) error {

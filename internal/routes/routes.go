@@ -150,4 +150,5 @@ func OrderRoutes(app fiber.Router, db *gorm.DB) {
 	orderGroup.Get("/user/:userId", orderHandler.ListOrdersByUserID)
 	orderGroup.Get("/:id", orderHandler.GetOrder)
 	orderGroup.Post("/create", orderHandler.CreateOrder)
+	orderGroup.Put("/:orderId/pay", orderHandler.MarkOrderAsPaid)
 }
