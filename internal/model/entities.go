@@ -1,8 +1,10 @@
 package model
 
 import (
+	"encoding/json"
 	"time"
 
+	"github.com/dreezy305/library-core-service/internal/constants"
 	"gorm.io/gorm"
 )
 
@@ -141,4 +143,26 @@ type OrderItemEntity struct {
 
 	Order OrderEntity `gorm:"foreignKey:OrderID;constraint:OnDelete:CASCADE"`
 	Book  BookEntity  `gorm:"foreignKey:BookID;constraint:OnDelete:CASCADE"`
+}
+
+type PaymentEntity struct {
+	ID             string                  `gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
+	OrderID        string                  `gorm:"not null;index"`
+	PaymentMethod  string                  `gorm:"not null"`
+	Amount         int64                   `gorm:"not null"`
+	Status         constants.PaymentStatus `gorm:"type:varchar(20);not null"`
+	Reference      string                  `gorm:"not null;uniqueIndex"`
+	PaymentGateway string                  `gorm:"not null"`
+	Currency       string                  `gorm:"not null"`
+
+	Metadata      json.RawMessage `gorm:"type:jsonb"`
+	TransactionID *string         `gorm:"uniqueIndex"`
+
+	WebhookProcessed bool `gorm:"not null;default:false"`
+
+	PaidAt *time.Time
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 }

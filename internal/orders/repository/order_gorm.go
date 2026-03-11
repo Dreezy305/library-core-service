@@ -20,7 +20,7 @@ func (r *GormOrderRepository) CreateOrder(tx *gorm.DB, order *model.OrderEntity)
 }
 
 func (r *GormOrderRepository) CreateOrderItems(tx *gorm.DB, items []*model.OrderItemEntity) error {
-	return tx.Create(&items).Error // batch insert
+	return tx.Create(&items).Error
 }
 
 func (r *GormOrderRepository) UpdateOrderStatus(tx *gorm.DB, orderId string, status string) error {
@@ -55,3 +55,4 @@ func (r *GormOrderRepository) ListOrdersByUserID(userID string) ([]*model.OrderE
 	}
 	return orders, nil
 }
+

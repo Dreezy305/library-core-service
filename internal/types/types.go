@@ -233,3 +233,15 @@ type OrderItemInput struct {
 	BookID   string `json:"bookId"`
 	Quantity int    `json:"quantity"`
 }
+
+type InitiatePaymentPayload struct {
+	OrderID          string                  `json:"orderId"`
+	PaymentMethod    string                  `json:"paymentMethod"`
+	Amount           int64                   `json:"amount"`
+	Metadata         string                  `json:"metadata"`
+	WebhookProcessed bool                    `json:"webhookProcessed"`
+	PaymentGateway   string                  `json:"paymentGateway"`
+	Status           constants.PaymentStatus `json:"status"`
+	Reference        string                  `json:"reference"`
+	Currency         string                  `json:"currency"`
+}
