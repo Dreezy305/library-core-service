@@ -32,7 +32,7 @@ type BookEntity struct {
 	CreatedAt       time.Time
 	UpdatedAt       time.Time
 	DeletedAt       gorm.DeletedAt `gorm:"index"`
-	Price           int64          `gorm:"not null"`
+	Price           int64          `gorm:"not null;default:0"`
 
 	Author     AuthorEntity     `gorm:"foreignKey:AuthorID"`
 	Categories []CategoryEntity `gorm:"many2many:book_categories;"`

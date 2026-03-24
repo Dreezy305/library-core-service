@@ -21,7 +21,8 @@ func Load() *AppConfig {
 		SMTPSenderName:  os.Getenv("SMTP_SENDER_NAME"),
 		SMTPSenderEmail: os.Getenv("SMTP_SENDER_EMAIL"),
 		SMTPNoReply:     os.Getenv("SMTP_NO_REPLY"),
-		ZeptobBaseURL:   os.Getenv("ZEPTO_BASEURL"),
+		ZeptobBaseURL:     os.Getenv("ZEPTO_BASEURL"),
+		PaystackSecretKey: os.Getenv("PAYSTACK_SECRET_KEY"),
 	}
 
 	// Optional: validate required fields

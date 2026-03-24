@@ -23,6 +23,8 @@ import (
 	UserHandler "github.com/dreezy305/library-core-service/internal/users/handler"
 	UserRepository "github.com/dreezy305/library-core-service/internal/users/repository"
 	UserService "github.com/dreezy305/library-core-service/internal/users/service"
+	WebhookHandler "github.com/dreezy305/library-core-service/internal/webhooks/handler"
+	WebhookService "github.com/dreezy305/library-core-service/internal/webhooks/service"
 	"github.com/gofiber/fiber/v3"
 
 	"github.com/gofiber/fiber/v3/middleware/healthcheck"
@@ -43,8 +45,6 @@ func AuthRoutes(app fiber.Router, db *gorm.DB) {
 	authRepo := AuthRepository.NewAuthRepository(gormRepo)
 	authService := AuthService.NewAuthService(*authRepo)
 	authHandler := AuthHandler.NewAuthHandler(authService)
-
-	// scripts.SeedUsers(authService, 100)
 
 	// Define user-related routes here
 	authGroup := app.Group("/auth")
@@ -152,3 +152,22 @@ func OrderRoutes(app fiber.Router, db *gorm.DB) {
 	orderGroup.Post("/create", orderHandler.CreateOrder)
 	orderGroup.Put("/:orderId/pay", orderHandler.MarkOrderAsPaid)
 }
+
+// WEBHOOK ROUTES
+func WebhookRoutes(app fiber.Router, db *gorm.DB, paystackSecret string) {
+	bookGormRepo := BookRepository.NewGormBookRepository(db)
+	bookRepo := BookRepository.NewBookRepository(bookGormRepo)
+
+	userGormRepo = UserRepository.NewGormUserRepository(db)
+	userRepo := UserRepository.NewUserRepository(userGormRepo)
+
+	orderGormRepo := OrderRepository.NewGormOrderRepository(db)
+	orderRepo := OrderRepository.NewOrderRepository(orderGormRepo)
+
+	webhookService := WebhookService.NewPaystackWebhookService(orderRepo, bookRepo, userRepo, db, paystackSecret)
+	webhookHandler := WebhookHandler.NewPayStackWebhookHandler(webhookService)
+
+	webhookGroup := app.Group("/webhook")
+	webhookGroup.Post("/paystack", webhookHandler.VerifySignature)
+}
+

@@ -9,5 +9,6 @@ type AppConfig struct {
 	SMTPSenderName  string
 	SMTPSenderEmail string
 	SMTPNoReply     string
-	ZeptobBaseURL   string
+	ZeptobBaseURL      string
+	PaystackSecretKey  string
 }

@@ -1,6 +1,7 @@
 package server
 
 import (
+	// "fmt
 	"fmt"
 	"log"
 
@@ -31,6 +32,7 @@ func Start() {
 	routes.BookCategoryRoutes(api, database)
 	routes.LoanRoutes(api, database)
 	routes.OrderRoutes(api, database)
+	routes.WebhookRoutes(api, database, cfg.PaystackSecretKey)
 
 	// Implementation of server start logic goes here
 	fmt.Println("Server started")
