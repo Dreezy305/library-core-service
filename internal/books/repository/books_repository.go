@@ -35,7 +35,7 @@ func (s *BookRepository) UpdateBook(bookId string, payload map[string]interface{
 	return s.gormRepo.UpdateBook(bookId, payload)
 }
 
-func (s *BookRepository) DecrementAvailable(bookId string) error {
+func (s *BookRepository) DecrementAvailable(bookId string, ) error {
 	return s.gormRepo.DecrementAvailable(bookId)
 }
 

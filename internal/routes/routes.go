@@ -159,7 +159,6 @@ func OrderRoutes(app fiber.Router, db *gorm.DB) {
 func WebhookRoutes(app fiber.Router, db *gorm.DB, paystackSecret string) {
 	bookGormRepo := BookRepository.NewGormBookRepository(db)
 	bookRepo := BookRepository.NewBookRepository(bookGormRepo)
-	bookService := BookService.NewBookService(*bookRepo)
 
 	userGormRepo = UserRepository.NewGormUserRepository(db)
 	userRepo := UserRepository.NewUserRepository(userGormRepo)
@@ -174,7 +173,7 @@ func WebhookRoutes(app fiber.Router, db *gorm.DB, paystackSecret string) {
 
 	paymentService := PaymentService.NewPaymentService(*paymentRepo, db)
 
-	webhookService := WebhookService.NewPaystackWebhookService(orderService, bookService, userRepo, paymentService, db, paystackSecret)
+	webhookService := WebhookService.NewPaystackWebhookService(orderService, paymentService, db, paystackSecret)
 	webhookHandler := WebhookHandler.NewPayStackWebhookHandler(webhookService)
 
 	webhookGroup := app.Group("/webhook")

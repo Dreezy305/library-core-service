@@ -334,6 +334,15 @@ type PaystackWebhookEvent struct {
 	} `json:"data"`
 }
 
+type PaymentMetadata struct {
+	OrderID    string `json:"order_id"`
+	UserID     string `json:"user_id"`
+	OrderItems []struct {
+		BookID   string `json:"book_id"`
+		Quantity int    `json:"quantity"`
+	} `json:"order_items"`
+}
+
 type UpdatePaymentPayload struct {
 	Status         constants.PaymentStatus `gorm:"type:varchar(20);not null"`
 	Reference      string                  `gorm:"not null;uniqueIndex"`

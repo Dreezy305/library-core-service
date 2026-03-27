@@ -131,6 +131,35 @@ func (s *OrderService) MarkOrderAsPaid(orderId string) error {
 	})
 }
 
+func (s *OrderService) MarkOrderAsPaidTx(tx *gorm.DB, orderId string) error {
+	order, err := s.repo.GetOrderByID(tx, orderId)
+	if err != nil {
+		return err
+	}
+	if order == nil {
+		return errors.New("order not found")
+	}
+	if order.Status != string(constants.OrderPending) {
+		return errors.New("order already processed")
+	}
+	for _, item := range order.Items {
+		if err := s.bookRepo.DecrementAvailableTx(tx, item.BookID, item.Quantity); err != nil {
+			return err
+		}
+	}
+	if err := s.repo.UpdateOrderStatus(tx, orderId, string(constants.OrderPaid)); err != nil {
+		return err
+	}
+	if err := s.repo.UpdateOrderItemStatus(tx, orderId, string(constants.OrderPaid)); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *OrderService) GetOrderByIDTx(tx *gorm.DB, id string) (*model.OrderEntity, error) {
+	return s.repo.GetOrderByID(tx, id)
+}
+
 func (s *OrderService) GetOrderByID(id string) (*model.OrderEntity, error) {
 	return s.repo.GetOrderByID(s.DB, id)
 }

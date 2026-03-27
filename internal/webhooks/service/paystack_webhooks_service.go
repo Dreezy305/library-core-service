@@ -9,28 +9,25 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 
 	"gorm.io/gorm"
 
-	BookService "github.com/dreezy305/library-core-service/internal/books/service"
+	"github.com/dreezy305/library-core-service/internal/constants"
 	OrderService "github.com/dreezy305/library-core-service/internal/orders/service"
 	PaymentService "github.com/dreezy305/library-core-service/internal/payments/service"
 	"github.com/dreezy305/library-core-service/internal/types"
-	UserRepository "github.com/dreezy305/library-core-service/internal/users/repository"
 )
 
 type PaystackWebhookService struct {
 	DB             *gorm.DB
-	bookService    *BookService.BookService
-	userRepo       *UserRepository.UserRepository
 	orderService   *OrderService.OrderService
 	paymentService *PaymentService.PaymentService
-
 	paystackSecret string
 }
 
-func NewPaystackWebhookService(orderService *OrderService.OrderService, bookService *BookService.BookService, userRepo *UserRepository.UserRepository, paymentService *PaymentService.PaymentService, db *gorm.DB, paystackSecret string) *PaystackWebhookService {
-	return &PaystackWebhookService{orderService: orderService, bookService: bookService, userRepo: userRepo, paymentService: paymentService, DB: db, paystackSecret: paystackSecret}
+func NewPaystackWebhookService(orderService *OrderService.OrderService, paymentService *PaymentService.PaymentService, db *gorm.DB, paystackSecret string) *PaystackWebhookService {
+	return &PaystackWebhookService{orderService: orderService, paymentService: paymentService, DB: db, paystackSecret: paystackSecret}
 }
 
 func (s *PaystackWebhookService) HandleWebhook(body []byte, signature string) error {
@@ -55,6 +52,10 @@ func (s *PaystackWebhookService) ProcessWebhook(event types.PaystackWebhookEvent
 	reference := event.Data.Reference
 	amount := event.Data.Amount
 	currency := event.Data.Currency
+	var metaData types.PaymentMetadata
+	if err := json.Unmarshal(event.Data.Metadata, &metaData); err != nil {
+		return err
+	}
 
 	// call paystack verify API
 	verified, err := s.VerifyTransaction(reference)
@@ -75,32 +76,33 @@ func (s *PaystackWebhookService) ProcessWebhook(event types.PaystackWebhookEvent
 		return fmt.Errorf("reference mismatch")
 	}
 
-	// update payment info
-	err = s.paymentService.UpdatePaymentInfo(reference, &types.UpdatePaymentPayload{
-		Status:         "success",
-		Reference:      reference,
-		PaymentGateway: "paystack",
-		Currency:       verified.Data.Currency,
-		Metadata:       verified.Data.Metadata,
-		PaymentMethod:  verified.Data.Channel,
+	// persist all DB changes in one atomic transaction
+	return s.DB.Transaction(func(tx *gorm.DB) error {
+		order, err := s.orderService.GetOrderByIDTx(tx, metaData.OrderID)
+		if err != nil {
+			return err
+		}
+		if order == nil {
+			return errors.New("order not found")
+		}
+		if order.Status == string(constants.OrderPaid) {
+			return errors.New("order already processed")
+		}
+
+		if err := s.paymentService.UpdatePaymentInfoTx(tx, reference, &types.UpdatePaymentPayload{
+			Status:         "success",
+			Reference:      reference,
+			PaymentGateway: "paystack",
+			Currency:       verified.Data.Currency,
+			Metadata:       verified.Data.Metadata,
+			PaymentMethod:  verified.Data.Channel,
+			PaidAt:         func() *time.Time { t := time.Now(); return &t }(),
+		}); err != nil {
+			return err
+		}
+
+		return s.orderService.MarkOrderAsPaidTx(tx, metaData.OrderID)
 	})
-	if err != nil {
-		return err
-	}
-
-	// mark order as paid
-	err = s.orderService.MarkOrderAsPaid(event.Data.Metadata.OrderID)
-	if err != nil {
-		return err
-	}
-
-	// DECREMENT BOOK STOCK
-	err = s.bookService.DecrementAvailable(event.Data.Metadata.BookID)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func (s *PaystackWebhookService) VerifyTransaction(reference string) (*types.PaystackVerifyResponse, error) {
@@ -116,7 +118,9 @@ func (s *PaystackWebhookService) VerifyTransaction(reference string) (*types.Pay
 	req.Header.Set("Content-Type", "application/json")
 
 	// Make request
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: 10 * time.Second,
+	}
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err

@@ -6,6 +6,7 @@ import (
 	"github.com/dreezy305/library-core-service/internal/books/repository"
 	"github.com/dreezy305/library-core-service/internal/model"
 	"github.com/dreezy305/library-core-service/internal/types"
+	"gorm.io/gorm"
 )
 
 type BookService struct {
@@ -93,4 +94,8 @@ func (s *BookService) DecrementAvailable(bookId string) error {
 
 func (s *BookService) IncrementAvailable(bookId string) error {
 	return s.repo.IncrementAvailable(bookId)
+}
+
+func (s *BookService) DecrementAvailableTx(tx *gorm.DB, bookId string, qty int) error {
+	return s.repo.DecrementAvailableTx(tx, bookId, qty)
 }
