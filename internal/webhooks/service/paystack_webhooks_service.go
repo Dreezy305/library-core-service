@@ -57,6 +57,10 @@ func (s *PaystackWebhookService) ProcessWebhook(event types.PaystackWebhookEvent
 		return err
 	}
 
+	if metaData.OrderID == "" {
+		return fmt.Errorf("missing order id")
+	}
+
 	// call paystack verify API
 	verified, err := s.VerifyTransaction(reference)
 	if err != nil {
@@ -78,16 +82,6 @@ func (s *PaystackWebhookService) ProcessWebhook(event types.PaystackWebhookEvent
 
 	// persist all DB changes in one atomic transaction
 	return s.DB.Transaction(func(tx *gorm.DB) error {
-		order, err := s.orderService.GetOrderByIDTx(tx, metaData.OrderID)
-		if err != nil {
-			return err
-		}
-		if order == nil {
-			return errors.New("order not found")
-		}
-		if order.Status == string(constants.OrderPaid) {
-			return errors.New("order already processed")
-		}
 
 		if err := s.paymentService.UpdatePaymentInfoTx(tx, reference, &types.UpdatePaymentPayload{
 			Status:         "success",
@@ -99,6 +93,20 @@ func (s *PaystackWebhookService) ProcessWebhook(event types.PaystackWebhookEvent
 			PaidAt:         func() *time.Time { t := time.Now(); return &t }(),
 		}); err != nil {
 			return err
+		}
+
+		order, err := s.orderService.GetOrderByIDTx(tx, metaData.OrderID)
+		if err != nil {
+			return err
+		}
+		if order == nil {
+			return errors.New("order not found")
+		}
+		if order.Status == string(constants.OrderPaid) {
+			return errors.New("order already processed")
+		}
+		if metaData.OrderID != order.ID {
+			return errors.New("order ID mismatch")
 		}
 
 		return s.orderService.MarkOrderAsPaidTx(tx, metaData.OrderID)
