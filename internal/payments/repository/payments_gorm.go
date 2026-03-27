@@ -24,3 +24,9 @@ func (r *GormPaymentRepository) UpdatePaymentStatus(tx *gorm.DB, paymentId strin
 		Where("id = ?", paymentId).
 		Update("Status", status).Error
 }
+
+func (r *GormPaymentRepository) UpdatePaymentInfo(tx *gorm.DB, paymentId string, payload *model.PaymentEntity) error {
+	return tx.Model(&model.PaymentEntity{}).
+		Where("id = ?", paymentId).
+		Updates(payload).Error
+}

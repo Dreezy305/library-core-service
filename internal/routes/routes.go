@@ -20,6 +20,8 @@ import (
 	OrderHandler "github.com/dreezy305/library-core-service/internal/orders/handler"
 	OrderRepository "github.com/dreezy305/library-core-service/internal/orders/repository"
 	OrderService "github.com/dreezy305/library-core-service/internal/orders/service"
+	PaymentRepository "github.com/dreezy305/library-core-service/internal/payments/repository"
+	PaymentService "github.com/dreezy305/library-core-service/internal/payments/service"
 	UserHandler "github.com/dreezy305/library-core-service/internal/users/handler"
 	UserRepository "github.com/dreezy305/library-core-service/internal/users/repository"
 	UserService "github.com/dreezy305/library-core-service/internal/users/service"
@@ -157,6 +159,7 @@ func OrderRoutes(app fiber.Router, db *gorm.DB) {
 func WebhookRoutes(app fiber.Router, db *gorm.DB, paystackSecret string) {
 	bookGormRepo := BookRepository.NewGormBookRepository(db)
 	bookRepo := BookRepository.NewBookRepository(bookGormRepo)
+	bookService := BookService.NewBookService(*bookRepo)
 
 	userGormRepo = UserRepository.NewGormUserRepository(db)
 	userRepo := UserRepository.NewUserRepository(userGormRepo)
@@ -164,10 +167,16 @@ func WebhookRoutes(app fiber.Router, db *gorm.DB, paystackSecret string) {
 	orderGormRepo := OrderRepository.NewGormOrderRepository(db)
 	orderRepo := OrderRepository.NewOrderRepository(orderGormRepo)
 
-	webhookService := WebhookService.NewPaystackWebhookService(orderRepo, bookRepo, userRepo, db, paystackSecret)
+	orderService := OrderService.NewOrderService(*orderRepo, bookRepo, userRepo, db)
+
+	paymentGormRepo := PaymentRepository.NewGormPaymentRepository(db)
+	paymentRepo := PaymentRepository.NewPaymentRepository(paymentGormRepo)
+
+	paymentService := PaymentService.NewPaymentService(*paymentRepo, db)
+
+	webhookService := WebhookService.NewPaystackWebhookService(orderService, bookService, userRepo, paymentService, db, paystackSecret)
 	webhookHandler := WebhookHandler.NewPayStackWebhookHandler(webhookService)
 
 	webhookGroup := app.Group("/webhook")
-	webhookGroup.Post("/paystack", webhookHandler.VerifySignature)
+	webhookGroup.Post("/paystack", webhookHandler.HandleWebhook)
 }
-

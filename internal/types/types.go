@@ -1,6 +1,7 @@
 package types
 
 import (
+	"encoding/json"
 	"time"
 
 	"github.com/dreezy305/library-core-service/internal/constants"
@@ -244,4 +245,106 @@ type InitiatePaymentPayload struct {
 	Status           constants.PaymentStatus `json:"status"`
 	Reference        string                  `json:"reference"`
 	Currency         string                  `json:"currency"`
+}
+
+type PaystackVerifyResponse struct {
+	Status  bool   `json:"status"`
+	Message string `json:"message"`
+	Data    struct {
+		ID              int64           `json:"id"`
+		Domain          string          `json:"domain"`
+		Status          string          `json:"status"`
+		Reference       string          `json:"reference"`
+		ReceiptNumber   *string         `json:"receipt_number"`
+		Amount          int64           `json:"amount"`
+		Message         *string         `json:"message"`
+		GatewayResponse string          `json:"gateway_response"`
+		PaidAt          string          `json:"paid_at"`
+		CreatedAt       string          `json:"created_at"`
+		Channel         string          `json:"channel"`
+		Currency        string          `json:"currency"`
+		IPAddress       string          `json:"ip_address"`
+		Metadata        json.RawMessage `json:"metadata"`
+		Log             struct {
+			StartTime int64 `json:"start_time"`
+			TimeSpent int64 `json:"time_spent"`
+			Attempts  int   `json:"attempts"`
+			Errors    int   `json:"errors"`
+			Success   bool  `json:"success"`
+			Mobile    bool  `json:"mobile"`
+			Input     []any `json:"input"`
+			History   []struct {
+				Type    string `json:"type"`
+				Message string `json:"message"`
+				Time    int    `json:"time"`
+			} `json:"history"`
+		} `json:"log"`
+		Fees          int64            `json:"fees"`
+		FeesSplit     *json.RawMessage `json:"fees_split"`
+		Authorization struct {
+			AuthorizationCode string  `json:"authorization_code"`
+			Bin               string  `json:"bin"`
+			Last4             string  `json:"last4"`
+			ExpMonth          string  `json:"exp_month"`
+			ExpYear           string  `json:"exp_year"`
+			Channel           string  `json:"channel"`
+			CardType          string  `json:"card_type"`
+			Bank              string  `json:"bank"`
+			CountryCode       string  `json:"country_code"`
+			Brand             string  `json:"brand"`
+			Reusable          bool    `json:"reusable"`
+			Signature         string  `json:"signature"`
+			AccountName       *string `json:"account_name"`
+		} `json:"authorization"`
+		Customer struct {
+			ID                       int64           `json:"id"`
+			FirstName                *string         `json:"first_name"`
+			LastName                 *string         `json:"last_name"`
+			Email                    string          `json:"email"`
+			CustomerCode             string          `json:"customer_code"`
+			Phone                    *string         `json:"phone"`
+			Metadata                 json.RawMessage `json:"metadata"`
+			RiskAction               string          `json:"risk_action"`
+			InternationalFormatPhone *string         `json:"international_format_phone"`
+		} `json:"customer"`
+		Plan               *json.RawMessage `json:"plan"`
+		Split              map[string]any   `json:"split"`
+		OrderID            *string          `json:"order_id"`
+		PaidAtAlt          string           `json:"paidAt"`
+		CreatedAtAlt       string           `json:"createdAt"`
+		RequestedAmount    int64            `json:"requested_amount"`
+		PosTransactionData *json.RawMessage `json:"pos_transaction_data"`
+		Source             *json.RawMessage `json:"source"`
+		FeesBreakdown      *json.RawMessage `json:"fees_breakdown"`
+		Connect            *json.RawMessage `json:"connect"`
+		TransactionDate    string           `json:"transaction_date"`
+		PlanObject         map[string]any   `json:"plan_object"`
+		Subaccount         map[string]any   `json:"subaccount"`
+	} `json:"data"`
+}
+
+type PaystackWebhookEvent struct {
+	Event string `json:"event"`
+	Data  struct {
+		Reference string          `json:"reference"`
+		Amount    int64           `json:"amount"`
+		Currency  string          `json:"currency"`
+		ID        int64           `json:"id"`
+		Metadata  json.RawMessage `json:"metadata"`
+	} `json:"data"`
+}
+
+type UpdatePaymentPayload struct {
+	Status         constants.PaymentStatus `gorm:"type:varchar(20);not null"`
+	Reference      string                  `gorm:"not null;uniqueIndex"`
+	PaymentGateway string                  `gorm:"not null"`
+	PaymentMethod  string                  `gorm:"not null"`
+	Currency       string                  `gorm:"not null"`
+
+	Metadata      json.RawMessage `gorm:"type:jsonb"`
+	TransactionID *string         `gorm:"uniqueIndex"`
+
+	WebhookProcessed bool `gorm:"not null;default:false"`
+
+	PaidAt *time.Time
 }

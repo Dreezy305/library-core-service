@@ -18,3 +18,11 @@ func NewPaymentRepository(gormRepo *GormPaymentRepository) *PaymentRepository {
 func (r *PaymentRepository) InitializePayment(tx *gorm.DB, payment *model.PaymentEntity) error {
 	return r.gormRepo.InitializePayment(tx, payment)
 }
+
+func (r *PaymentRepository) UpdatePaymentStatus(tx *gorm.DB, paymentId string, status string) error {
+	return r.gormRepo.UpdatePaymentStatus(tx, paymentId, status)
+}
+
+func (r *PaymentRepository) UpdatePaymentInfo(tx *gorm.DB, paymentId string, payload *model.PaymentEntity) error {
+	return r.gormRepo.UpdatePaymentInfo(tx, paymentId, payload)
+}

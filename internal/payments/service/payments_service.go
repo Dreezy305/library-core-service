@@ -35,3 +35,32 @@ func (s *PaymentService) InitializePayment(payload *types.InitiatePaymentPayload
 	}
 	return s.repo.InitializePayment(s.DB, payment)
 }
+
+func (s *PaymentService) UpdatePaymentStatus(paymentId string, status string) error {
+	return s.repo.UpdatePaymentStatus(s.DB, paymentId, status)
+}
+
+func (s *PaymentService) UpdatePaymentInfo(paymentId string, payload *types.UpdatePaymentPayload) error {
+
+	var status constants.PaymentStatus
+	switch payload.Status {
+	case "success":
+		status = constants.PaymentPaid
+	case "failed":
+		status = constants.PaymentFailed
+	default:
+		status = constants.PaymentPending
+	}
+
+	payment := &model.PaymentEntity{
+		Status:           status,
+		Reference:        payload.Reference,
+		PaymentGateway:   payload.PaymentGateway,
+		WebhookProcessed: true,
+		PaymentMethod:    payload.PaymentGateway,
+		Currency:         payload.Currency,
+		Metadata:         json.RawMessage(payload.Metadata),
+	}
+
+	return s.repo.UpdatePaymentInfo(s.DB, paymentId, payment)
+}
