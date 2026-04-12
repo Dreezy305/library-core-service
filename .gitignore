@@ -1,3 +1,5 @@
 .env
 .idris-log-report.md
 tmp
+
+book/
